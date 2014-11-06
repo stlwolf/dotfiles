@@ -42,3 +42,6 @@ peco-select-history() {
     READLINE_POINT=${#l}
 }
 bind -x '"\C-r": peco-select-history'
+
+## open pull request sh
+alias opp='open_pr'
