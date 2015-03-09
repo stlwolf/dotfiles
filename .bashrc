@@ -1,6 +1,7 @@
 export LANG=ja_JP.UTF-8
 export HISTCONTROL=$HISTCONTROL${HISTCONTROL+,}ignoredups
 export HISTCONTROL=ignoreboth
+export VAGRANT_DEFAULT_PROVIDER=parallels
  
 shopt -u histappend   # .bash_history追記モードは不要なのでOFFに
  
@@ -45,3 +46,24 @@ bind -x '"\C-r": peco-select-history'
 
 ## open pull request sh
 alias opp='open_pr'
+
+## node.js
+if [[ -s ~/.nvm/nvm.sh ]];
+ then source ~/.nvm/nvm.sh
+fi
+
+### Virtualenvwrapper
+if [ -f /usr/local/bin/virtualenvwrapper.sh ]; then
+    export WORKON_HOME=$HOME/.virtualenvs
+    source /usr/local/bin/virtualenvwrapper.sh
+fi
+
+## work
+alias py='python'
+alias gpo="git pull origin master"
+alias runserver="py manage.py runserver"
+alias malembic="py manage.py alembic"
+alias mtest="py manage.py test"
+alias cdr='cd ~/work/repos/torioki'
+
+workon torioki

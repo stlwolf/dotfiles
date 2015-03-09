@@ -33,3 +33,26 @@ if has('syntax')
   augroup END
   call ZenkakuSpace()
 endif
+
+" neobundleとやらの設定
+set nocompatible
+filetype plugin indent off
+
+if has('vim_starting')
+  set runtimepath+=~/.vim/bundle/neobundle.vim
+  call neobundle#begin(expand('~/.vim/bundle/'))
+  NeoBundleFetch 'Shougo/neobundle.vim'
+  call neobundle#end()
+endif 
+
+NeoBundleFetch 'Shougo/neobundle.vim'
+
+" 以下は必要に応じて追加
+NeoBundle 'Shougo/unite.vim'
+NeoBundle 'Shougo/neosnippet.vim'
+NeoBundle 'davidhalter/jedi-vim'
+
+filetype plugin indent on
+
+" docstringは表示しない
+autocmd FileType python setlocal completeopt-=preview
