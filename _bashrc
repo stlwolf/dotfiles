@@ -59,11 +59,13 @@ if [ -f /usr/local/bin/virtualenvwrapper.sh ]; then
 fi
 
 ## work
+alias vi='vim'
 alias py='python'
-alias gpo="git pull origin master"
-alias runserver="py manage.py runserver"
+alias gl="git pull origin master"
+alias runserver="cdr; py manage.py runserver"
 alias malembic="py manage.py alembic"
 alias mtest="py manage.py test"
 alias cdr='cd ~/work/repos/torioki'
+alias mdbreload="malembic downgrade base;malembic upgrade head"
 
-workon torioki
+export PYTHONPATH="/usr/local/lib/python2.7/site-packages;"
