@@ -36,31 +36,43 @@ if has('syntax')
 endif
 "ここまで
 
-" neobundleとやらの設定
+"" Neobundle
 set nocompatible
 filetype plugin indent off
 
 if has('vim_starting')
   set runtimepath+=~/.vim/bundle/neobundle.vim
   call neobundle#begin(expand('~/.vim/bundle/'))
+
     NeoBundleFetch 'Shougo/neobundle.vim'
+
+    NeoBundle 'Shougo/vimproc', {
+    \ 'build' : {
+    \ 'windows' : 'make -f make_mingw32.mak',
+    \ 'cygwin' : 'make -f make_cygwin.mak',
+    \ 'mac' : 'make -f make_mac.mak',
+    \ 'unix' : 'make -f make_unix.mak',
+    \ },}
+
+    NeoBundle 'Shougo/unite.vim'
+    NeoBundle 'Shougo/neosnippet.vim'
+    NeoBundle 'davidhalter/jedi-vim'
+    NeoBundle 'Townk/vim-autoclose'
+    NeoBundle 'scrooloose/nerdtree'
+    NeoBundle "thinca/vim-qfreplace"
+    NeoBundle 'kana/vim-submode'
+    NeoBundle "thinca/vim-quickrun"
+    NeoBundle "osyo-manga/shabadou.vim"
+    NeoBundle "osyo-manga/vim-watchdogs"
+    NeoBundle "jceb/vim-hier"
+    NeoBundle "dannyob/quickfixstatus"
+    NeoBundle "itchyny/lightline.vim"
+    NeoBundle "KazuakiM/vim-qfstatusline"
+    NeoBundle 'tmhedberg/matchit'
+
+
   call neobundle#end()
 endif 
-
-" 以下は必要に応じて追加
-NeoBundle 'Shougo/vimproc', {
-\ 'build' : {
-\ 'windows' : 'make -f make_mingw32.mak',
-\ 'cygwin' : 'make -f make_cygwin.mak',
-\ 'mac' : 'make -f make_mac.mak',
-\ 'unix' : 'make -f make_unix.mak',
-\ },}
-NeoBundle 'Shougo/unite.vim'
-NeoBundle 'Shougo/neosnippet.vim'
-NeoBundle 'davidhalter/jedi-vim'
-NeoBundle 'Townk/vim-autoclose'
-NeoBundle 'scrooloose/nerdtree'
-NeoBundle "thinca/vim-qfreplace"
 
 filetype plugin indent on
 
@@ -106,57 +118,44 @@ else
     endfunction
 endif
 
-" その2：補完の時に一番上の選択肢が自動的に選ばれる対応
-" http://dackdive.hateblo.jp/entry/2014/08/13/130000
-"------------------------------------
-" neocomplete.vim
-"------------------------------------
-" Note: This option must set it in .vimrc(_vimrc).  NOT IN .gvimrc(_gvimrc)!
-" Disable AutoComplPop.
-"let g:acp_enableAtStartup = 0
-"" Use neocomplete.
-"let g:neocomplete#enable_at_startup = 1
-"" Use smartcase.
-"let g:neocomplete#enable_smart_case = 1
-"" Set minimum syntax keyword length.
-"let g:neocomplete#sources#syntax#min_keyword_length = 3
-"let g:neocomplete#lock_buffer_name_pattern = '\*ku\*'
-"" Plugin key-mappings.
-"inoremap <expr><C-g>     neocomplete#undo_completion()
-"inoremap <expr><C-l>     neocomplete#complete_common_string()
-"
-"" Recommended key-mappings.
-"" <CR>: close popup and save indent.
-"inoremap <silent> <CR> <C-r>=<SID>my_cr_function()<CR>
-"function! s:my_cr_function()
-"  " return neocomplete#close_popup() . "\<CR>"
-"  " For no inserting <CR> key.
-"  return pumvisible() ? neocomplete#close_popup() : "\<CR>"
-"endfunction
-"" <TAB>: completion.
-"inoremap <expr><TAB>  pumvisible() ? "\<C-n>" : "\<TAB>"
-"" <C-h>, <BS>: close popup and delete backword char.
-"inoremap <expr><C-h> neocomplete#smart_close_popup()."\<C-h>"
-"inoremap <expr><BS> neocomplete#smart_close_popup()."\<C-h>"
-"inoremap <expr><C-y>  neocomplete#close_popup()
-"inoremap <expr><C-e>  neocomplete#cancel_popup()
-"
-"" Close popup by <Space>.
-"inoremap <expr><Space> pumvisible() ? neocomplete#close_popup() : "\<Space>"
-"
-" ここまでneocompleteの設定
-
-"autocmd FileType python setlocal omnifunc=jedi#completions
-"let g:jedi#completions_enabled = 0
-"let g:jedi#auto_vim_configuration = 0
-"
-"if !exists('g:neocomplete#force_omni_input_patterns')
-"        let g:neocomplete#force_omni_input_patterns = {}
-"endif
-"
-"let g:neocomplete#force_omni_input_patterns.python = '\h\w*\|[^. \t]\.\w*'
-" http://dackdive.hateblo.jp/entry/2014/08/13/130000 ここまで
-
 " 外部grepに使うプログラム設定
 " http://qiita.com/taketin/items/27bdb9e6472c3d0bb090
 set grepprg=ag\ -a
+
+" Vimの便利な画面分割＆タブページと、それを更に便利にする方法
+" http://qiita.com/tekkoc/items/98adcadfa4bdc8b5a6ca
+nnoremap s <Nop>
+nnoremap sj <C-w>j
+nnoremap sk <C-w>k
+nnoremap sl <C-w>l
+nnoremap sh <C-w>h
+nnoremap sJ <C-w>J
+nnoremap sK <C-w>K
+nnoremap sL <C-w>L
+nnoremap sH <C-w>H
+nnoremap sn gt
+nnoremap sp gT
+nnoremap sr <C-w>r
+nnoremap s= <C-w>=
+nnoremap sw <C-w>w
+nnoremap so <C-w>_<C-w>|
+nnoremap sO <C-w>=
+nnoremap sN :<C-u>bn<CR>
+nnoremap sP :<C-u>bp<CR>
+nnoremap st :<C-u>tabnew<CR>
+nnoremap sT :<C-u>Unite tab<CR>
+nnoremap ss :<C-u>sp<CR>
+nnoremap sv :<C-u>vs<CR>
+nnoremap sq :<C-u>q<CR>
+nnoremap sQ :<C-u>bd<CR>
+nnoremap sb :<C-u>Unite buffer_tab -buffer-name=file<CR>
+nnoremap sB :<C-u>Unite buffer -buffer-name=file<CR>
+
+call submode#enter_with('bufmove', 'n', '', 's>', '<C-w>>')
+call submode#enter_with('bufmove', 'n', '', 's<', '<C-w><')
+call submode#enter_with('bufmove', 'n', '', 's+', '<C-w>+')
+call submode#enter_with('bufmove', 'n', '', 's-', '<C-w>-')
+call submode#map('bufmove', 'n', '', '>', '<C-w>>')
+call submode#map('bufmove', 'n', '', '<', '<C-w><')
+call submode#map('bufmove', 'n', '', '+', '<C-w>+')
+call submode#map('bufmove', 'n', '', '-', '<C-w>-')
