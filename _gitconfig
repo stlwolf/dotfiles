@@ -1,19 +1,22 @@
 [filter "media"]
-	clean = git media clean %f
-	smudge = git media smudge %f
-	required = true
-[user]
-	name = eddy
-	email = takao.e.13@gmail.com
+    clean = git media clean %f
+    smudge = git media smudge %f
+    required = true
+[usur]
+    name = eddy
+	email = takao.eddy@gmail.com
 [core]
-        editor = vim
-        pager = lv -c
+    editor = vim
+    pager = lv -c
 [alias]
-        co = checkout
+    co = checkout
+    st = status
 [color]
-        ui = auto
-        status = auto
-        diff = auto
-        branch = auto
-        interactive = auto
-        grep = auto
+    ui = auto
+    status = auto
+    diff = auto
+    branch = auto
+    interactive = auto
+    grep = auto
+[credential]
+    helper = osxkeychain

@@ -118,10 +118,6 @@ else
     endfunction
 endif
 
-" 外部grepに使うプログラム設定
-" http://qiita.com/taketin/items/27bdb9e6472c3d0bb090
-set grepprg=ag\ -a
-
 " Vimの便利な画面分割＆タブページと、それを更に便利にする方法
 " http://qiita.com/tekkoc/items/98adcadfa4bdc8b5a6ca
 nnoremap s <Nop>
