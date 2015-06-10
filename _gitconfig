@@ -2,9 +2,9 @@
     clean = git media clean %f
     smudge = git media smudge %f
     required = true
-[usur]
+[user]
     name = eddy
-	email = takao.eddy@gmail.com
+    email = takao.eddy@gmail.com
 [core]
     editor = vim
     pager = lv -c
