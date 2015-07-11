@@ -44,9 +44,6 @@ peco-select-history() {
 }
 bind -x '"\C-r": peco-select-history'
 
-## open pull request sh
-alias opp='open_pr'
-
 ## node.js
 if [[ -s ~/.nvm/nvm.sh ]];
  then source ~/.nvm/nvm.sh
@@ -58,14 +55,12 @@ if [ -f /usr/local/bin/virtualenvwrapper.sh ]; then
     source /usr/local/bin/virtualenvwrapper.sh
 fi
 
-## work
+## alias
 alias vi='vim'
 alias py='python'
 alias gl="git pull origin master"
-alias runserver="cdr; py manage.py runserver"
-alias malembic="py manage.py alembic"
-alias mtest="py manage.py test"
-alias cdr='cd ~/work/repos/torioki'
-alias mdbreload="malembic downgrade base;malembic upgrade head"
 
-export PYTHONPATH="/usr/local/lib/python2.7/site-packages;"
+# ローカルファイルに分ける
+if [ -e "${HOME}/.bashrc.local" ]; then
+  source "${HOME}/.bashrc.local"
+fi
