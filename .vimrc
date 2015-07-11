@@ -56,6 +56,7 @@ if has('vim_starting')
 
     NeoBundle 'Shougo/unite.vim'
     NeoBundle 'Shougo/neosnippet.vim'
+    NeoBundle 'Shougo/neosnippet-snippets'
     NeoBundle 'davidhalter/jedi-vim'
     NeoBundle 'Townk/vim-autoclose'
     NeoBundle 'scrooloose/nerdtree'
@@ -63,7 +64,6 @@ if has('vim_starting')
     NeoBundle 'kana/vim-submode'
     NeoBundle "thinca/vim-quickrun"
     NeoBundle "osyo-manga/shabadou.vim"
-    NeoBundle "osyo-manga/vim-watchdogs"
     NeoBundle "jceb/vim-hier"
     NeoBundle "dannyob/quickfixstatus"
     NeoBundle "itchyny/lightline.vim"
