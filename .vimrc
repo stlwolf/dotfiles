@@ -200,3 +200,22 @@ if executable('ag')
   let g:unite_source_grep_default_opts = '--nogroup --nocolor --column'
   let g:unite_source_grep_recursive_opt = ''
 endif
+
+" ctagsをちゃんと使う
+" http://qiita.com/soramugi/items/7014c866b705e2cd0b95
+
+" 拡張子で読み込みタグ変更                            
+au BufNewFile,BufRead *.py set tags+=$HOME/python.tags  
+
+" vim-tags
+au BufNewFile,BufRead *.python let g:vim_tags_project_tags_command = "ctags --languages=python -f ~/python.tags `pwd` 2>/dev/null &"
+
+" tagsジャンプの時に複数ある時は一覧表示                                        
+nnoremap <C-]> g<C-]> 
+
+" Vimスクリプトで軽やかにタグジャンプしよう
+" http://qiita.com/tutu/items/fbc4023ebc3004964e86
+nnoremap <C-h> :vsp<CR> :exe("tjump ".expand('<cword>'))<CR>
+nnoremap <C-k> :split<CR> :exe("tjump ".expand('<cword>'))<CR>
+
+" :TagsGenerate で Cタグ更新
