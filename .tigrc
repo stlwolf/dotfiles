@@ -1,12 +1,13 @@
 #############################
 # キーバインド
 #############################
+# shift+gで末尾
 bind generic G move-last-line
 
 #############################
 # 画面分割系
 #############################
 # デフォルト値
-# set vertical-split = auto#
+# set vertical-split = auto
 # 横分割に強制する
 set vertical-split = no

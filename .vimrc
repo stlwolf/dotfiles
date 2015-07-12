@@ -64,20 +64,15 @@ if has('vim_starting')
     NeoBundle 'kana/vim-submode'
     NeoBundle "thinca/vim-quickrun"
     NeoBundle "osyo-manga/shabadou.vim"
-    NeoBundle "jceb/vim-hier"
-    NeoBundle "dannyob/quickfixstatus"
-    NeoBundle "itchyny/lightline.vim"
-    NeoBundle "KazuakiM/vim-qfstatusline"
     NeoBundle 'tmhedberg/matchit'
-
 
   call neobundle#end()
 endif 
 
-filetype plugin indent on
+" install check
+NeoBundleCheck
 
-" docstringは表示しない
-autocmd FileType python setlocal completeopt-=preview
+filetype plugin indent on
 
 " これにより、vim上でCtrl+eでNERDTreeを開くことができます。
 " http://qiita.com/zwirky/items/0209579a635b4f9c95ee
@@ -85,6 +80,9 @@ nnoremap <silent><C-e> :NERDTreeToggle<CR>
 
 " NERDTREEでpyc除外
 let NERDTreeIgnore = ['\.pyc$']
+
+" docstringは表示しない
+autocmd FileType python setlocal completeopt-=preview
 
 " if has('lua') && v:version > 703 && has('patch825') 2013-07-03 14:30 > から >= に修正
 " if has('lua') && v:version >= 703 && has('patch825') 2013-07-08 10:00 必要バージョンが885にアップデートされていました

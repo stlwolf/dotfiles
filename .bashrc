@@ -58,7 +58,8 @@ fi
 ## alias
 alias vi='vim'
 alias py='python'
-alias gl="git pull origin master"
+alias gl='git pull origin master'
+alias ll='ls -la'
 
 # ローカルファイルに分ける
 if [ -e "${HOME}/.bashrc.local" ]; then
