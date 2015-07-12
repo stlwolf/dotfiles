@@ -1,0 +1,11 @@
+tap 'homebrew/bundle'
+
+brew 'tmux'
+brew 'git'
+brew 'tig'
+brew 'peco'
+brew 'wget'
+
+tap 'caskroom/cask'
+brew 'brew-cask'
+cask 'appcleaner'
