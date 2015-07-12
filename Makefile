@@ -1,3 +1,7 @@
+DOTFILES_EXCLUDES := .DS_Store .git .gitmodules
+DOTFILES_TARGET   := $(wildcard .??*) bin
+DOTFILES_FILES    := $(filter-out $(DOTFILES_EXCLUDES), $(DOTFILES_TARGET))
+
 help:
 	@echo "make list           #=> Show file list for deployment"
 	@echo "make update         #=> Fetch changes for this repo"
@@ -8,9 +12,14 @@ help:
 
 list:
 	@echo "make list"
+	@$(foreach val, $(DOTFILES_FILES), ls -dF $(val);)
 
 update:
 	@echo "make update"
+	git pull origin master
+	git submodule init
+	git submodule update
+	git submodule foreach git pull origin master
 
 test:
 	@echo "make test"
@@ -18,6 +27,8 @@ test:
 deploy:
 	@echo '==> Start to deploy dotfiles to home directory.'
 	@echo ''
+	@$(foreach val, $(DOTFILES_FILES), ln -sfnv $(abspath $(val)) $(HOME)/$(val);)
 
 init:
 	@echo "make init"
+	@DOTPATH=$(PWD) bash $(PWD)/etc/init/init.sh

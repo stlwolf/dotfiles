@@ -1,11 +1,11 @@
 tap 'homebrew/bundle'
 
+brew 'bash'
 brew 'tmux'
 brew 'git'
 brew 'tig'
 brew 'peco'
 brew 'wget'
-
-tap 'caskroom/cask'
-brew 'brew-cask'
-cask 'appcleaner'
+brew 'bash-completion'
+brew 'lv'
+brew 'the_silver_searcher'
