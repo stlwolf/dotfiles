@@ -65,6 +65,7 @@ if has('vim_starting')
     NeoBundle "thinca/vim-quickrun"
     NeoBundle "osyo-manga/shabadou.vim"
     NeoBundle 'tmhedberg/matchit'
+    NeoBundle 'altercation/vim-colors-solarized'
 
   call neobundle#end()
 endif 
@@ -164,3 +165,11 @@ if $TMUX != ""
     autocmd BufEnter * let &titlestring = ' ' . expand("%:t")
   augroup END
 endif
+
+" 最強カラースキームと言えば SOLARIZED だよね！
+" http://blog.remora.cx/2012/10/let-us-use-solarized.html
+syntax enable
+set background=light
+colorscheme solarized
+
+call togglebg#map('<F5>')

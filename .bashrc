@@ -1,3 +1,4 @@
+PATH="$PATH":~/bin
 export LANG=ja_JP.UTF-8
 export HISTCONTROL=$HISTCONTROL${HISTCONTROL+,}ignoredups
 export HISTCONTROL=ignoreboth
