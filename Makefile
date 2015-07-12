@@ -32,3 +32,8 @@ deploy:
 init:
 	@echo "make init"
 	@DOTPATH=$(PWD) bash $(PWD)/etc/init/init.sh
+
+clean:
+	@echo 'Remove dot files in your home directory...'
+	@-$(foreach val, $(DOTFILES_FILES), rm -vrf $(HOME)/$(val);)
+	# -rm -rf $(PWD)
