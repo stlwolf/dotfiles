@@ -60,6 +60,7 @@ alias vi='vim'
 alias py='python'
 alias gl='git pull origin master'
 alias ll='ls -la'
+alias open_pr='open_github_pullrequest'
 
 # ターミナルマルチプレクサ tmux をカスタマイズする
 # http://qiita.com/b4b4r07/items/01359e8a3066d1c37edc
