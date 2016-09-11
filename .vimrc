@@ -219,3 +219,19 @@ nnoremap <C-h> :vsp<CR> :exe("tjump ".expand('<cword>'))<CR>
 nnoremap <C-k> :split<CR> :exe("tjump ".expand('<cword>'))<CR>
 
 " :TagsGenerate で Cタグ更新
+
+" PHPの設定
+" DBシンタックス設定 mysqlにしておく
+let g:sql_type_default = 'mysql'
+" 文字列の中のSQLをハイライト
+let php_sql_query = 1
+" Baselibメソッドのハイライト
+let php_baselib = 1
+" HTMLもハイライト
+let php_htmlInStrings = 1
+" <? を無効にする→ハイライト除外にする
+let php_noShortTags = 1
+" ] や ) の対応エラーをハイライト
+let php_parent_error_close = 1
+let php_parent_error_open = 1
+
