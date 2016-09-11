@@ -221,6 +221,7 @@ nnoremap <C-k> :split<CR> :exe("tjump ".expand('<cword>'))<CR>
 " :TagsGenerate で Cタグ更新
 
 " PHPの設定
+" http://blog.nest-online.jp/16976 Vimでのコーディングがより快適になるおすすめプラグイン20選
 " DBシンタックス設定 mysqlにしておく
 let g:sql_type_default = 'mysql'
 " 文字列の中のSQLをハイライト
@@ -234,4 +235,7 @@ let php_noShortTags = 1
 " ] や ) の対応エラーをハイライト
 let php_parent_error_close = 1
 let php_parent_error_open = 1
-
+" snipetの選択時に必要っぽい？
+" http://rcmdnk.github.io/blog/2015/01/12/computer-vim/
+imap <C-k> <Plug>(neosnippet_expand_or_jump)
+smap <C-k> <Plug>(neosnippet_expand_or_jump)
