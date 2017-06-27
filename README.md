@@ -1,5 +1,4 @@
 ## dotfiles
 
-
-### vim setup
-https://github.com/Shougo/neobundle.vim
+- Install NeoBundle   
+  https://github.com/Shougo/neobundle.vim
