@@ -44,17 +44,6 @@ peco-select-history() {
 }
 bind -x '"\C-r": peco-select-history'
 
-## node.js
-if [[ -s ~/.nvm/nvm.sh ]];
- then source ~/.nvm/nvm.sh
-fi
-
-### Virtualenvwrapper
-if [ -f /usr/local/bin/virtualenvwrapper.sh ]; then
-    export WORKON_HOME=$HOME/.virtualenvs
-    source /usr/local/bin/virtualenvwrapper.sh
-fi
-
 ## alias
 alias vi='vim'
 alias py='python'
