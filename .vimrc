@@ -10,6 +10,7 @@ set autoindent
 set smartindent cinwords=if,elif,else,for,while,try,finally,except,def,class
 set tabstop=4 expandtab shiftwidth=4 softtabstop=4
 set backspace=indent,eol,start
+set noswapfile
 
 """"""""""""""""""""""""""""""
 "全角スペースを表示
