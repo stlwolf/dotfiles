@@ -1,0 +1,5 @@
+alias vi='vim'
+alias py='python'
+alias ll='ls -la'
+
+export VIMINIT="let \$MYVIMRC='$SSHHOME/.sshrc.d/.vimrc' | source \$MYVIMRC"
