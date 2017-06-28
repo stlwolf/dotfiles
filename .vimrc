@@ -10,6 +10,7 @@ set autoindent
 set smartindent cinwords=if,elif,else,for,while,try,finally,except,def,class
 set tabstop=4 expandtab shiftwidth=4 softtabstop=4
 set backspace=indent,eol,start
+set noswapfile
 
 """"""""""""""""""""""""""""""
 "全角スペースを表示
@@ -166,11 +167,13 @@ if $TMUX != ""
   augroup END
 endif
 
+" The best flat theme for Vim, Atom, Sublime Text, Jetbrains Editors, Terminal.app, iTerm, Xcode and XTerm
+" https://github.com/raphamorim/lucario
+syntax enable
+colorscheme lucario
 " 最強カラースキームと言えば SOLARIZED だよね！
 " http://blog.remora.cx/2012/10/let-us-use-solarized.html
-syntax enable
-set background=light
-colorscheme solarized
+"colorscheme solarized
 
 " F5でカラースキーム切り替え
 call togglebg#map('<F5>')

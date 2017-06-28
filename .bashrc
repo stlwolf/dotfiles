@@ -18,7 +18,7 @@ if [ -f `brew --prefix`/etc/bash_completion ]; then
 fi
  
 NAME='HOME'
-if [ -f ~/git-completion.bash ]; then
+if [ -f `brew --prefix`/etc/bash_completion.d/git-completion.bash ]; then
     PS1='\[\e[0;37m\]${NAME}\[\e[0;37m\][\t]\[\e[0;37m\]: \[\e[1;37m\]\w\n\[\e[1;33m\]h:\! j:\j\[\e[0;36m\]$(__git_ps1) \[\e[0;34m\]\$\[\e[m\] '
 else
     PS1='\[\e[0;37m\]${NAME}\[\e[0;37m\][\t]\[\e[0;37m\]: \[\e[1;37m\]\w\n\[\e[1;33m\]h:\! j:\j \[\e[0;34m\]\$\[\e[m\] '
@@ -43,17 +43,6 @@ peco-select-history() {
     READLINE_POINT=${#l}
 }
 bind -x '"\C-r": peco-select-history'
-
-## node.js
-if [[ -s ~/.nvm/nvm.sh ]];
- then source ~/.nvm/nvm.sh
-fi
-
-### Virtualenvwrapper
-if [ -f /usr/local/bin/virtualenvwrapper.sh ]; then
-    export WORKON_HOME=$HOME/.virtualenvs
-    source /usr/local/bin/virtualenvwrapper.sh
-fi
 
 ## alias
 alias vi='vim'
