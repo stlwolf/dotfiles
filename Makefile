@@ -33,6 +33,9 @@ init:
 	@echo "make init"
 	@DOTPATH=$(PWD) bash $(PWD)/etc/init/init.sh
 
+install:
+	@echo "make update deploy init"
+
 clean:
 	@echo 'Remove dot files in your home directory...'
 	@-$(foreach val, $(DOTFILES_FILES), rm -vrf $(HOME)/$(val);)
