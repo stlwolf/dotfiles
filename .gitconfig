@@ -3,8 +3,8 @@
     smudge = git media smudge %f
     required = true
 [user]
-    name = 
-    email = 
+    name = test
+    email = test
 [core]
     editor = vim
     pager = lv -c
