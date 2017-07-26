@@ -16,7 +16,11 @@ export PROMPT_COMMAND='share_history'  # 上記関数をプロンプト毎に自
 if [ -f `brew --prefix`/etc/bash_completion ]; then
         . `brew --prefix`/etc/bash_completion
 fi
- 
+
+if [ -f `brew --prefix`/etc/hub.bash_completion ]; then
+        . `brew --prefix`/etc/hub.bash_completion
+fi
+
 NAME='HOME'
 if [ -f `brew --prefix`/etc/bash_completion.d/git-completion.bash ]; then
     PS1='\[\e[0;37m\]${NAME}\[\e[0;37m\][\t]\[\e[0;37m\]: \[\e[1;37m\]\w\n\[\e[1;33m\]h:\! j:\j\[\e[0;36m\]$(__git_ps1) \[\e[0;34m\]\$\[\e[m\] '
