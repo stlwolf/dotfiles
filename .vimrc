@@ -19,12 +19,12 @@ set noswapfile
 "このファイルのエンコードが一致するよう注意！
 "全角スペースが強調表示されない場合、ここでscriptencodingを指定すると良い。
 "scriptencoding cp932
- 
+
 "デフォルトのZenkakuSpaceを定義
 function! ZenkakuSpace()
   highlight ZenkakuSpace cterm=underline ctermfg=darkgrey gui=underline guifg=darkgrey
 endfunction
- 
+
 if has('syntax')
   augroup ZenkakuSpace
     autocmd!
@@ -75,7 +75,7 @@ if has('vim_starting')
     "NeoBundle 'scrooloose/syntastic'
 
   call neobundle#end()
-endif 
+endif
 
 " install check
 NeoBundleCheck
@@ -120,7 +120,7 @@ else
         let g:acp_enableAtStartup = 0
         let g:neocomplcache_enable_smart_case = 1
         " NeoComplCacheを有効化
-        " NeoComplCacheEnable 
+        " NeoComplCacheEnable
     endfunction
 endif
 
@@ -213,14 +213,14 @@ endif
 " ctagsをちゃんと使う
 " http://qiita.com/soramugi/items/7014c866b705e2cd0b95
 
-" 拡張子で読み込みタグ変更                            
-au BufNewFile,BufRead *.py set tags+=$HOME/python.tags  
+" 拡張子で読み込みタグ変更
+au BufNewFile,BufRead *.py set tags+=$HOME/python.tags
 
 " vim-tags
 au BufNewFile,BufRead *.python let g:vim_tags_project_tags_command = "ctags --languages=python -f ~/python.tags `pwd` 2>/dev/null &"
 
-" tagsジャンプの時に複数ある時は一覧表示                                        
-nnoremap <C-]> g<C-]> 
+" tagsジャンプの時に複数ある時は一覧表示
+nnoremap <C-]> g<C-]>
 
 " Vimスクリプトで軽やかにタグジャンプしよう
 " http://qiita.com/tutu/items/fbc4023ebc3004964e86
@@ -251,7 +251,7 @@ smap <C-k> <Plug>(neosnippet_expand_or_jump)
 
 " lightline.vim を使って vim のステータスラインをカスタマイズ
 " http://qiita.com/yuyuchu3333/items/20a0acfe7e0d0e167ccc
-set laststatus=2 
+set laststatus=2
 
 " lightline.vim
 let g:lightline = {
@@ -384,3 +384,5 @@ function! MyCharCode()
   return "'". char ."' ". nr
 endfunction
 
+" 行末スペース削除
+autocmd BufWritePre * :%s/\s\+$//ge
