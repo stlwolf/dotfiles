@@ -2,9 +2,9 @@ PATH="$PATH":~/bin
 export LANG=ja_JP.UTF-8
 export HISTCONTROL=$HISTCONTROL${HISTCONTROL+,}ignoredups
 export HISTCONTROL=ignoreboth
- 
+
 shopt -u histappend   # .bash_history追記モードは不要なのでOFFに
- 
+
 function share_history {  # 以下の内容を関数として定義
    history -a  # .bash_historyに前回コマンドを1行追記
    history -c  # 端末ローカルの履歴を一旦消去
@@ -133,8 +133,14 @@ function tmux_ssh() {
 }
 
 alias ssh=tmux_ssh
+alias gh='cd $(ghq root)/$(ghq list | peco)'
+alias ghh='hub browse $(ghq list | peco | cut -d "/" -f 2,3)'
+alias gpm='git pull origin master'
 
 # ローカルファイルに分ける
 if [ -e "${HOME}/.bashrc.local" ]; then
   source "${HOME}/.bashrc.local"
 fi
+
+eval "$(hub alias -s)"
+
