@@ -7,10 +7,18 @@ set incsearch
 set hlsearch
 set number
 set autoindent
-set smartindent cinwords=if,elif,else,for,while,try,finally,except,def,class
-set tabstop=4 expandtab shiftwidth=4 softtabstop=4
+set expandtab smartindent
+set cinwords=if,elif,else,for,while,try,finally,except,def,class
+set tabstop=4 shiftwidth=4 softtabstop=4
 set backspace=indent,eol,start
 set noswapfile
+
+"Change setting according to filetype.
+augroup fileTypeIndent
+    autocmd!
+    autocmd BufNewFile,BufRead *.html setlocal tabstop=2 softtabstop=2 shiftwidth=2
+    autocmd BufNewFile,BufRead *.js setlocal tabstop=2 softtabstop=2 shiftwidth=2
+augroup END
 
 """"""""""""""""""""""""""""""
 "全角スペースを表示
@@ -229,21 +237,6 @@ nnoremap <C-k> :split<CR> :exe("tjump ".expand('<cword>'))<CR>
 
 " :TagsGenerate で Cタグ更新
 
-" PHPの設定
-" http://blog.nest-online.jp/16976 Vimでのコーディングがより快適になるおすすめプラグイン20選
-" DBシンタックス設定 mysqlにしておく
-let g:sql_type_default = 'mysql'
-" 文字列の中のSQLをハイライト
-let php_sql_query = 1
-" Baselibメソッドのハイライト
-let php_baselib = 1
-" HTMLもハイライト
-let php_htmlInStrings = 1
-" <? を無効にする→ハイライト除外にする
-let php_noShortTags = 1
-" ] や ) の対応エラーをハイライト
-let php_parent_error_close = 1
-let php_parent_error_open = 1
 " snipetの選択時に必要っぽい？
 " http://rcmdnk.github.io/blog/2015/01/12/computer-vim/
 imap <C-k> <Plug>(neosnippet_expand_or_jump)
