@@ -51,9 +51,17 @@ bind -x '"\C-r": peco-select-history'
 ## alias
 alias vi='vim'
 alias py='python'
-alias gl='git pull origin master'
 alias ll='ls -la'
 alias og='open_github'
+
+alias gh='cd $(ghq root)/$(ghq list | peco)'
+alias ghh='hub browse $(ghq list | peco | cut -d "/" -f 2,3)'
+
+# git alias
+alias gpm='git pull origin master'
+alias gb='git branch'
+alias gc='git checkout'
+alias gs='git status'
 
 # ターミナルマルチプレクサ tmux をカスタマイズする
 # http://qiita.com/b4b4r07/items/01359e8a3066d1c37edc
@@ -133,9 +141,6 @@ function tmux_ssh() {
 }
 
 alias ssh=tmux_ssh
-alias gh='cd $(ghq root)/$(ghq list | peco)'
-alias ghh='hub browse $(ghq list | peco | cut -d "/" -f 2,3)'
-alias gpm='git pull origin master'
 
 # ローカルファイルに分ける
 if [ -e "${HOME}/.bashrc.local" ]; then
