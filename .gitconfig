@@ -21,3 +21,5 @@
     grep = auto
 [credential]
     helper = osxkeychain
+[ghq]
+    root = ~/work/repos
