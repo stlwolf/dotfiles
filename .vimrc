@@ -1,3 +1,6 @@
+"""""""""""""""""""""""""""""
+" Basic settings
+"""""""""""""""""""""""""""""
 syntax on
 set encoding=utf-8
 set fileencoding=utf-8 fileformat=unix
@@ -20,9 +23,9 @@ augroup fileTypeIndent
     autocmd BufNewFile,BufRead *.js setlocal tabstop=2 softtabstop=2 shiftwidth=2
 augroup END
 
-""""""""""""""""""""""""""""""
-"全角スペースを表示
-""""""""""""""""""""""""""""""
+"""""""""""""""""""""""""""""
+" 全角スペースを表示
+"""""""""""""""""""""""""""""
 "コメント以外で全角スペースを指定しているので scriptencodingと、
 "このファイルのエンコードが一致するよう注意！
 "全角スペースが強調表示されない場合、ここでscriptencodingを指定すると良い。
@@ -45,7 +48,9 @@ if has('syntax')
 endif
 "ここまで
 
-"" Neobundle
+"""""""""""""""""""""""""""""
+" Neobundle settings.
+"""""""""""""""""""""""""""""
 set nocompatible
 filetype plugin indent off
 
@@ -132,6 +137,23 @@ else
     endfunction
 endif
 
+"""""""""""""""""""""""""""""
+" tmux settings.
+"""""""""""""""""""""""""""""
+" tmuxのウィンドウ名をvimの編集中のファイル名に設定する
+" http://qiita.com/ssh0/items/9300a22954cf7016279d
+if $TMUX != ""
+  augroup titlesettings
+    autocmd!
+    autocmd BufEnter * call system("tmux rename-window " . "'[vim] " . expand("%:t") . "'")
+    autocmd VimLeave * call system("tmux rename-window zsh")
+    autocmd BufEnter * let &titlestring = ' ' . expand("%:t")
+  augroup END
+endif
+
+"""""""""""""""""""""""""""""
+" Other settings.
+"""""""""""""""""""""""""""""
 " Vimの便利な画面分割＆タブページと、それを更に便利にする方法
 " http://qiita.com/tekkoc/items/98adcadfa4bdc8b5a6ca
 nnoremap s <Nop>
@@ -169,17 +191,6 @@ call submode#map('bufmove', 'n', '', '>', '<C-w>>')
 call submode#map('bufmove', 'n', '', '<', '<C-w><')
 call submode#map('bufmove', 'n', '', '+', '<C-w>+')
 call submode#map('bufmove', 'n', '', '-', '<C-w>-')
-
-" tmuxのウィンドウ名をvimの編集中のファイル名に設定する
-" http://qiita.com/ssh0/items/9300a22954cf7016279d
-if $TMUX != ""
-  augroup titlesettings
-    autocmd!
-    autocmd BufEnter * call system("tmux rename-window " . "'[vim] " . expand("%:t") . "'")
-    autocmd VimLeave * call system("tmux rename-window zsh")
-    autocmd BufEnter * let &titlestring = ' ' . expand("%:t")
-  augroup END
-endif
 
 " The best flat theme for Vim, Atom, Sublime Text, Jetbrains Editors, Terminal.app, iTerm, Xcode and XTerm
 " https://github.com/raphamorim/lucario
