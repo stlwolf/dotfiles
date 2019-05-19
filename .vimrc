@@ -236,9 +236,8 @@ nnoremap sB :<C-u>Unite buffer -buffer-name=file<CR>
 " https://github.com/raphamorim/lucario
 syntax enable
 colorscheme lucario
-" 最強カラースキームと言えば SOLARIZED だよね！
-" http://blog.remora.cx/2012/10/let-us-use-solarized.html
-"colorscheme solarized
+" 256色,truecolor,背景色
+set t_Co=256 termguicolors background=dark
 
 " F5でカラースキーム切り替え
 "call togglebg#map('<F5>')
