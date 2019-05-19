@@ -18,8 +18,8 @@ list:
 
 init:
 	@echo "make init"
+	@mkdir -p $(REPOS_PATH)
 	@DOTPATH=$(PWD) bash $(PWD)/etc/init/init.sh
-	mkdir -p $(REPOS_PATH)
 
 deploy:
 	@echo '==> Start to deploy dotfiles to home directory.'
