@@ -1,3 +1,5 @@
+REPOS_PATH        := $(HOME)/work/repos
+
 DOTFILES_EXCLUDES := .DS_Store .git .gitmodules
 DOTFILES_TARGET   := $(wildcard .??*) bin
 DOTFILES_FILES    := $(filter-out $(DOTFILES_EXCLUDES), $(DOTFILES_TARGET))
@@ -17,6 +19,7 @@ list:
 init:
 	@echo "make init"
 	@DOTPATH=$(PWD) bash $(PWD)/etc/init/init.sh
+	mkdir -p $(REPOS_PATH)
 
 deploy:
 	@echo '==> Start to deploy dotfiles to home directory.'
