@@ -20,3 +20,8 @@ brew 'tig'
 brew 'tmux'
 brew 'tree'
 brew 'wget'
+
+cask 'google-chrome'
+cask 'karabiner-elements'
+cask 'intellij-idea'
+cask 'docker'
