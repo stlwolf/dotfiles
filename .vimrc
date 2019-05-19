@@ -49,6 +49,46 @@ endif
 "ここまで
 
 """""""""""""""""""""""""""""
+" dein.vim settings.
+"""""""""""""""""""""""""""""
+" プラグインがインストールされるディレクトリ
+let s:dein_dir = expand('~/.cache/dein')
+" dein.vim 本体がインストールされるディレクトリ
+let s:dein_repo_dir = s:dein_dir . '/repos/github.com/Shougo/dein.vim'
+
+" dein.vim がなければ github から落としてくる
+if &runtimepath !~# '/dein.vim'
+  if !isdirectory(s:dein_repo_dir)
+    execute '!git clone https://github.com/Shougo/dein.vim' s:dein_repo_dir
+  endif
+  execute 'set runtimepath^=' . fnamemodify(s:dein_repo_dir, ':p')
+endif
+
+" 設定開始
+if dein#load_state(s:dein_dir)
+  call dein#begin(s:dein_dir)
+
+  " プラグインリストを収めた TOML ファイル
+  " 予め TOML ファイル（後述）を用意しておく
+  let g:rc_dir    = expand('~/.vim/rc')
+  let s:toml      = g:rc_dir . '/dein.toml'
+  let s:lazy_toml = g:rc_dir . '/dein_lazy.toml'
+
+  " TOML を読み込み、キャッシュしておく
+  call dein#load_toml(s:toml,      {'lazy': 0})
+  call dein#load_toml(s:lazy_toml, {'lazy': 1})
+
+  " 設定終了
+  call dein#end()
+  call dein#save_state()
+endif
+
+" もし、未インストールものものがあったらインストール
+if dein#check_install()
+  call dein#install()
+endif
+
+"""""""""""""""""""""""""""""
 " Neobundle settings.
 """""""""""""""""""""""""""""
 set nocompatible
@@ -56,42 +96,42 @@ filetype plugin indent off
 
 if has('vim_starting')
   set runtimepath+=~/.vim/bundle/neobundle.vim
-  call neobundle#begin(expand('~/.vim/bundle/'))
+  "call neobundle#begin(expand('~/.vim/bundle/'))
 
-    NeoBundleFetch 'Shougo/neobundle.vim'
+    "NeoBundleFetch 'Shougo/neobundle.vim'
 
-    NeoBundle 'Shougo/vimproc', {
-    \ 'build' : {
-    \ 'windows' : 'make -f make_mingw32.mak',
-    \ 'cygwin' : 'make -f make_cygwin.mak',
-    \ 'mac' : 'make -f make_mac.mak',
-    \ 'unix' : 'make -f make_unix.mak',
-    \ },}
+    "NeoBundle 'Shougo/vimproc', {
+    "\ 'build' : {
+    "\ 'windows' : 'make -f make_mingw32.mak',
+    "\ 'cygwin' : 'make -f make_cygwin.mak',
+    "\ 'mac' : 'make -f make_mac.mak',
+    "\ 'unix' : 'make -f make_unix.mak',
+    "\ },}
 
-    NeoBundle 'Shougo/unite.vim'
-    NeoBundle 'Shougo/neosnippet.vim'
-    NeoBundle 'Shougo/neosnippet-snippets'
-    NeoBundle 'davidhalter/jedi-vim'
-    NeoBundle 'Townk/vim-autoclose'
-    NeoBundle 'scrooloose/nerdtree'
-    NeoBundle "thinca/vim-qfreplace"
-    NeoBundle 'kana/vim-submode'
-    NeoBundle "thinca/vim-quickrun"
-    NeoBundle "osyo-manga/shabadou.vim"
-    NeoBundle 'tmhedberg/matchit'
-    NeoBundle 'altercation/vim-colors-solarized'
-    NeoBundle "terryma/vim-expand-region"
-    NeoBundle 'tpope/vim-fugitive'
-    NeoBundle 'jacoborus/tender'
-    NeoBundle 'itchyny/lightline.vim'
-    NeoBundle 'airblade/vim-gitgutter'
+    "NeoBundle 'Shougo/unite.vim'
+    "NeoBundle 'Shougo/neosnippet.vim'
+    "NeoBundle 'Shougo/neosnippet-snippets'
+    "NeoBundle 'davidhalter/jedi-vim'
+    "NeoBundle 'Townk/vim-autoclose'
+    "NeoBundle 'scrooloose/nerdtree'
+    "NeoBundle 'thinca/vim-qfreplace'
+    "NeoBundle 'kana/vim-submode'
+    "NeoBundle 'thinca/vim-quickrun'
+    "NeoBundle 'osyo-manga/shabadou.vim'
+    "NeoBundle 'tmhedberg/matchit'
+    "NeoBundle 'altercation/vim-colors-solarized'
+    "NeoBundle 'terryma/vim-expand-region'
+    "NeoBundle 'tpope/vim-fugitive'
+    "NeoBundle 'jacoborus/tender'
+    "NeoBundle 'itchyny/lightline.vim'
+    "NeoBundle 'airblade/vim-gitgutter'
     "NeoBundle 'scrooloose/syntastic'
 
-  call neobundle#end()
+  "call neobundle#end()
 endif
 
 " install check
-NeoBundleCheck
+"NeoBundleCheck
 
 filetype plugin indent on
 
@@ -122,19 +162,19 @@ if has('lua') && v:version >= 703 && has('patch885')
         " NeoCompleteEnable
     endfunction
 else
-    NeoBundleLazy "Shougo/neocomplcache.vim", {
-        \ "autoload": {
-        \   "insert": 1,
-        \ }}
+    "NeoBundleLazy "Shougo/neocomplcache.vim", {
+    "    \ "autoload": {
+    "    \   "insert": 1,
+    "    \ }}
     " 2013-07-03 14:30 原因不明だがNeoComplCacheEnableコマンドが見つからないので変更
-    let g:neocomplcache_enable_at_startup = 1
-    let s:hooks = neobundle#get_hooks("neocomplcache.vim")
-    function! s:hooks.on_source(bundle)
-        let g:acp_enableAtStartup = 0
-        let g:neocomplcache_enable_smart_case = 1
-        " NeoComplCacheを有効化
-        " NeoComplCacheEnable
-    endfunction
+    "let g:neocomplcache_enable_at_startup = 1
+    "let s:hooks = neobundle#get_hooks("neocomplcache.vim")
+    "function! s:hooks.on_source(bundle)
+    "    let g:acp_enableAtStartup = 0
+    "    let g:neocomplcache_enable_smart_case = 1
+    "    " NeoComplCacheを有効化
+    "    " NeoComplCacheEnable
+    "endfunction
 endif
 
 """""""""""""""""""""""""""""
@@ -183,14 +223,14 @@ nnoremap sQ :<C-u>bd<CR>
 nnoremap sb :<C-u>Unite buffer_tab -buffer-name=file<CR>
 nnoremap sB :<C-u>Unite buffer -buffer-name=file<CR>
 
-call submode#enter_with('bufmove', 'n', '', 's>', '<C-w>>')
-call submode#enter_with('bufmove', 'n', '', 's<', '<C-w><')
-call submode#enter_with('bufmove', 'n', '', 's+', '<C-w>+')
-call submode#enter_with('bufmove', 'n', '', 's-', '<C-w>-')
-call submode#map('bufmove', 'n', '', '>', '<C-w>>')
-call submode#map('bufmove', 'n', '', '<', '<C-w><')
-call submode#map('bufmove', 'n', '', '+', '<C-w>+')
-call submode#map('bufmove', 'n', '', '-', '<C-w>-')
+"call submode#enter_with('bufmove', 'n', '', 's>', '<C-w>>')
+"call submode#enter_with('bufmove', 'n', '', 's<', '<C-w><')
+"call submode#enter_with('bufmove', 'n', '', 's+', '<C-w>+')
+"call submode#enter_with('bufmove', 'n', '', 's-', '<C-w>-')
+"call submode#map('bufmove', 'n', '', '>', '<C-w>>')
+"call submode#map('bufmove', 'n', '', '<', '<C-w><')
+"call submode#map('bufmove', 'n', '', '+', '<C-w>+')
+"call submode#map('bufmove', 'n', '', '-', '<C-w>-')
 
 " The best flat theme for Vim, Atom, Sublime Text, Jetbrains Editors, Terminal.app, iTerm, Xcode and XTerm
 " https://github.com/raphamorim/lucario
@@ -201,7 +241,7 @@ colorscheme lucario
 "colorscheme solarized
 
 " F5でカラースキーム切り替え
-call togglebg#map('<F5>')
+"call togglebg#map('<F5>')
 
 " agとUnite.vimで快適高速grep環境を手に入れる
 " http://blog.monochromegane.com/blog/2013/09/18/ag-and-unite/
