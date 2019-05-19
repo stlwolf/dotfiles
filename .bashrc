@@ -48,12 +48,15 @@ peco-select-history() {
 }
 bind -x '"\C-r": peco-select-history'
 
-## alias
+## os alias
+alias ll='ls -la'
+
+# application alias
 alias vi='vim'
 alias py='python'
-alias ll='ls -la'
 alias og='open_github'
 
+# ghq alias
 alias gh='cd $(ghq root)/$(ghq list | peco)'
 alias ghh='hub browse $(ghq list | peco | cut -d "/" -f 2,3)'
 
@@ -61,6 +64,7 @@ alias ghh='hub browse $(ghq list | peco | cut -d "/" -f 2,3)'
 alias gpm='git pull origin master'
 alias gb='git branch'
 alias gc='git checkout'
+alias gf='git diff'
 alias gs='git status'
 
 # ターミナルマルチプレクサ tmux をカスタマイズする
@@ -142,10 +146,10 @@ function tmux_ssh() {
 
 alias ssh=tmux_ssh
 
+eval "$(hub alias -s)"
+
 # ローカルファイルに分ける
 if [ -e "${HOME}/.bashrc.local" ]; then
   source "${HOME}/.bashrc.local"
 fi
-
-eval "$(hub alias -s)"
 
