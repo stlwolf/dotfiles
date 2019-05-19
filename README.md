@@ -1,5 +1,8 @@
 ## dotfiles
 
+- Localization
+  [Google 日本語入力](https://www.google.co.jp/ime/)
+
 - Install NeoBundle   
   https://github.com/Shougo/neobundle.vim
 
