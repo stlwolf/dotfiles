@@ -1,0 +1,240 @@
+# 基本は github.com のレポジトリーを指定するだけ
+[[plugins]]
+repo = 'Shougo/dein.vim'
+
+[[plugins]] # asyncchronous execute library
+repo = 'Shougo/vimproc.vim'
+hook_post_update = '''
+ 	if dein#util#_is_windows()
+   		let cmd = 'tools\\update-dll-mingw'
+ 	elseif dein#util#_is_cygwin()
+		let cmd = 'make -f make_cygwin.mak'
+	elseif executable('gmake')
+		let cmd = 'gmake'
+	else
+		let cmd = 'make'
+	endif
+  	let g:dein#plugin.build = cmd
+'''
+
+[[plugins]] # unite all inferface
+repo = 'Shougo/denite.nvim'
+
+# FIXME: Not installed yet. https://github.com/Shougo/deoplete.nvim
+#[[plugins]]
+#repo = 'Shougo/deoplete.nvim'
+
+# FIXME: Not installed yet.
+# 参考: https://qiita.com/takezo/items/809d53ecd37c438bac9e
+#[[plugins]]
+#repo = 'Shougo/neosnippet'
+#
+#[[plugins]]
+#repo = 'Shougo/neosnippet-snippets'
+## snipetの選択時に必要っぽい？
+## http://rcmdnk.github.io/blog/2015/01/12/computer-vim/
+#hook_add = '''
+#    imap <C-k> <Plug>(neosnippet_expand_or_jump)
+#    smap <C-k> <Plug>(neosnippet_expand_or_jump)
+#'''
+
+[[plugins]] # toml syntax
+repo = 'cespare/vim-toml'
+on_ft = 'toml'
+
+[[plugins]] # file tree
+repo = 'scrooloose/nerdtree'
+# Ctrl+eでNERDTreeを開く
+# NERDTREEでpyc除外
+# View settings.
+hook_add = '''
+    nnoremap <silent><C-e> :NERDTreeToggle<CR>
+    let NERDTreeIgnore = ['\.pyc$']
+    let g:NERDTreeDirArrowExpandable = '▸'
+    let g:NERDTreeDirArrowCollapsible = '▾'
+    let g:NERDTreeShowHidden = 1
+'''
+
+[[plugins]] # window resize command
+# Vimの便利な画面分割＆タブページと、それを更に便利にする方法
+# http://qiita.com/tekkoc/items/98adcadfa4bdc8b5a6ca
+repo = 'kana/vim-submode'
+hook_add = '''
+    call submode#enter_with('bufmove', 'n', '', 's>', '<C-w>>')
+    call submode#enter_with('bufmove', 'n', '', 's<', '<C-w><')
+    call submode#enter_with('bufmove', 'n', '', 's+', '<C-w>+')
+    call submode#enter_with('bufmove', 'n', '', 's-', '<C-w>-')
+    call submode#map('bufmove', 'n', '', '>', '<C-w>>')
+    call submode#map('bufmove', 'n', '', '<', '<C-w><')
+    call submode#map('bufmove', 'n', '', '+', '<C-w>+')
+    call submode#map('bufmove', 'n', '', '-', '<C-w>-')
+'''
+
+[[plugins]] # e.g. [],'', auto close
+repo = 'Townk/vim-autoclose'
+
+[[plugins]] # git change diff viwe
+repo = 'airblade/vim-gitgutter'
+
+[[plugins]] # The plugin provides mappings to easily delete, change and add such surroundings in pairs.
+repo = 'tpope/vim-surround'
+
+[[plugins]] # visually select increasingly larger regions
+repo = 'terryma/vim-expand-region'
+
+[[plugins]] # The matchit.vim script allows you to configure % to match more than just single characters.
+repo = 'tmhedberg/matchit'
+
+[[plugins]]
+repo = 'vim-syntastic/syntastic'
+hook_post_source='''
+    let g:syntastic_mode_map = { 'mode': 'passive', 'active_filetypes': ['go', 'python'] }
+    let g:syntastic_go_checkers = ['golint', 'gotype', 'govet', 'go']
+    let g:syntastic_python_checkers = ['pylint']
+'''
+
+# View git liner info
+[[plugins]] # color scheme
+repo = 'jacoborus/tender.vim'
+
+[[plugins]]
+repo = 'tpope/vim-fugitive'
+
+[[plugins]] # A light and configurable statusline/tabline plugin for Vim
+repo = 'itchyny/lightline.vim'
+# lightline.vim を使って vim のステータスラインをカスタマイズ
+# http://qiita.com/yuyuchu3333/items/20a0acfe7e0d0e167ccc
+# FIXME: Read from source.
+hook_add = '''
+    set laststatus=2
+
+    let g:lightline = {
+            \ 'colorscheme': 'tender',
+            \ 'mode_map': {'c': 'NORMAL'},
+            \ 'active': {
+            \   'left': [
+            \     ['mode', 'paste'],
+            \     ['fugitive', 'gitgutter', 'filename'],
+            \   ],
+            \   'right': [
+            \     ['lineinfo', 'syntastic'],
+            \     ['percent'],
+            \     ['charcode', 'fileformat', 'fileencoding', 'filetype'],
+            \   ]
+            \ },
+            \ 'component_function': {
+            \   'modified': 'MyModified',
+            \   'readonly': 'MyReadonly',
+            \   'fugitive': 'MyFugitive',
+            \   'filename': 'MyFilename',
+            \   'fileformat': 'MyFileformat',
+            \   'filetype': 'MyFiletype',
+            \   'fileencoding': 'MyFileencoding',
+            \   'mode': 'MyMode',
+            \   'syntastic': 'SyntasticStatuslineFlag',
+            \   'charcode': 'MyCharCode',
+            \   'gitgutter': 'MyGitGutter',
+            \ },
+            \ }
+
+    function! MyModified()
+      return &ft =~ 'help\|vimfiler\|gundo' ? '' : &modified ? '+' : &modifiable ? '' : '-'
+    endfunction
+
+    function! MyReadonly()
+      return &ft !~? 'help\|vimfiler\|gundo' && &ro ? '⭤' : ''
+    endfunction
+
+    function! MyFilename()
+      return ('' != MyReadonly() ? MyReadonly() . ' ' : '') .
+            \ (&ft == 'vimfiler' ? vimfiler#get_status_string() :
+            \  &ft == 'unite' ? unite#get_status_string() :
+            \  &ft == 'vimshell' ? substitute(b:vimshell.current_dir,expand('~'),'~','') :
+            \ '' != expand('%:t') ? expand('%:t') : '[No Name]') .
+            \ ('' != MyModified() ? ' ' . MyModified() : '')
+    endfunction
+
+    function! MyFugitive()
+      try
+        if &ft !~? 'vimfiler\|gundo' && exists('*fugitive#head')
+          let _ = fugitive#head()
+          return strlen(_) ? '⭠ '._ : ''
+        endif
+      catch
+      endtry
+      return ''
+    endfunction
+
+    function! MyFileformat()
+      return winwidth('.') > 70 ? &fileformat : ''
+    endfunction
+
+    function! MyFiletype()
+      return winwidth('.') > 70 ? (strlen(&filetype) ? &filetype : 'no ft') : ''
+    endfunction
+
+    function! MyFileencoding()
+      return winwidth('.') > 70 ? (strlen(&fenc) ? &fenc : &enc) : ''
+    endfunction
+
+    function! MyMode()
+      return winwidth('.') > 60 ? lightline#mode() : ''
+    endfunction
+
+    function! MyGitGutter()
+      if ! exists('*GitGutterGetHunkSummary')
+            \ || ! get(g:, 'gitgutter_enabled', 0)
+            \ || winwidth('.') <= 90
+        return ''
+      endif
+      let symbols = [
+            \ g:gitgutter_sign_added . ' ',
+            \ g:gitgutter_sign_modified . ' ',
+            \ g:gitgutter_sign_removed . ' '
+            \ ]
+      let hunks = GitGutterGetHunkSummary()
+      let ret = []
+      for i in [0, 1, 2]
+        if hunks[i] > 0
+          call add(ret, symbols[i] . hunks[i])
+        endif
+      endfor
+      return join(ret, ' ')
+    endfunction
+
+    " https://github.com/Lokaltog/vim-powerline/blob/develop/autoload/Powerline/Functions.vim
+    function! MyCharCode()
+      if winwidth('.') <= 70
+        return ''
+      endif
+
+      " Get the output of :ascii
+      redir => ascii
+      silent! ascii
+      redir END
+
+      if match(ascii, 'NUL') != -1
+        return 'NUL'
+      endif
+
+      " Zero pad hex values
+      let nrformat = '0x%02x'
+
+      let encoding = (&fenc == '' ? &enc : &fenc)
+
+      if encoding == 'utf-8'
+        " Zero pad with 4 zeroes in unicode files
+        let nrformat = '0x%04x'
+      endif
+
+      " Get the character and the numeric value from the return value of :ascii
+      " This matches the two first pieces of the return value, e.g.
+      " "<F>  70" => char: 'F', nr: '70'
+      let [str, char, nr; rest] = matchlist(ascii, '\v\<(.{-1,})\>\s*([0-9]+)')
+
+      " Format the numeric value
+      let nr = printf(nrformat, nr)
+
+      return "'". char ."' ". nr
+    endfunction
+'''
