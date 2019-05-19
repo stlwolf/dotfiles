@@ -1,7 +1,7 @@
 ## dotfiles
 
 - Localization
-  [Google 日本語入力](https://www.google.co.jp/ime/)
+  - [Google 日本語入力](https://www.google.co.jp/ime/)
 
 - Install NeoBundle   
   https://github.com/Shougo/neobundle.vim
@@ -13,11 +13,11 @@
 ```
 
 - color scheme  
-  [lucario](https://github.com/raphamorim/lucario)  
-  [tender](https://github.com/jacoborus/tender.vim)  
+  - [lucario](https://github.com/raphamorim/lucario)  
+  - [tender](https://github.com/jacoborus/tender.vim)  
   
 - fonts  
-  [自家製Rounded M+](http://jikasei.me/font/rounded-mplus/)  
-  [BackUP](https://github.com/stlwolf/fonts)  
+  - [自家製Rounded M+](http://jikasei.me/font/rounded-mplus/)  
+  - [BackUP](https://github.com/stlwolf/fonts)  
   
   
