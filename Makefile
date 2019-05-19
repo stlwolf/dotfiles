@@ -14,24 +14,21 @@ list:
 	@echo "make list"
 	@$(foreach val, $(DOTFILES_FILES), ls -dF $(val);)
 
-update:
-	@echo "make update"
-	git pull origin master
-	git submodule init
-	git submodule update
-	git submodule foreach git pull origin master
-
-test:
-	@echo "make test"
+init:
+	@echo "make init"
+	@DOTPATH=$(PWD) bash $(PWD)/etc/init/init.sh
 
 deploy:
 	@echo '==> Start to deploy dotfiles to home directory.'
 	@echo ''
 	@$(foreach val, $(DOTFILES_FILES), ln -sfnv $(abspath $(val)) $(HOME)/$(val);)
 
-init:
-	@echo "make init"
-	@DOTPATH=$(PWD) bash $(PWD)/etc/init/init.sh
+update:
+	@echo "make update"
+	git pull origin master
+	git submodule init
+	git submodule update
+	git submodule foreach git pull origin master
 
 install:
 	@echo "make update deploy init"
