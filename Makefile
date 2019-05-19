@@ -11,6 +11,7 @@ help:
 	@echo "make init           #=> Setup environment settings"
 	@echo "make install        #=> Run make update, deploy, init"
 	@echo "make clean          #=> Remove the dotfiles and this repo"
+	@echo "make anyenv         #=> Setup anyenv. Init and install plugins"
 
 list:
 	@echo "make list"
@@ -22,8 +23,8 @@ init:
 	@DOTPATH=$(PWD) bash $(PWD)/etc/init/init.sh
 
 deploy:
-	@echo '==> Start to deploy dotfiles to home directory.'
-	@echo ''
+	@echo "==> Start to deploy dotfiles to home directory."
+	@echo ""
 	@$(foreach val, $(DOTFILES_FILES), ln -sfnv $(abspath $(val)) $(HOME)/$(val);)
 
 update:
@@ -37,6 +38,15 @@ install:
 	@echo "make update deploy init"
 
 clean:
-	@echo 'Remove dot files in your home directory...'
+	@echo "Remove dot files in your home directory..."
 	@-$(foreach val, $(DOTFILES_FILES), rm -vrf $(HOME)/$(val);)
 	# -rm -rf $(PWD)
+
+anyenv:
+	@echo "Setup anyenv"
+	@$(anyenv init)
+	@$(anyenv install --init)
+	@$(echo $SHELL -l)
+	@cd $(PWD)/.anyenv/plugins && git clone https://github.com/znz/anyenv-update.git
+	@cd $(PWD)/.anyenv/plugins && git clone https://github.com/znz/anyenv-git.git
+

@@ -26,4 +26,18 @@
   - [自家製Rounded M+](http://jikasei.me/font/rounded-mplus/)
   - [BackUP](https://github.com/stlwolf/fonts)
 
+#### Env
 
+- [anyenv](https://github.com/anyenv/anyenv)
+```shell
+  # Makefile
+  make anyenv
+
+  # official setup e.g.
+  anyenv install -l
+  anyenv install nodenv
+  exec $SHELL -l
+  nodenv install 8.10.0
+  nodenv global 8.10.0
+  nodenv rehash
+```
