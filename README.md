@@ -1,16 +1,22 @@
 ## dotfiles
 
+#### Application
+
 - Localization
   - [Google 日本語入力](https://www.google.co.jp/ime/)
 
-- Install NeoBundle
-  https://github.com/Shougo/neobundle.vim
+#### Terminal
 
 - Change brew bash
 ```
   sudo bash -c 'echo /usr/local/bin/bash >> /etc/shells'
   chsh -s /usr/local/bin/bash
 ```
+
+#### Editor
+
+- Vim
+  - [dein](https://github.com/Shougo/dein.vim)
 
 - Color scheme
   - [lucario](https://github.com/raphamorim/lucario)
