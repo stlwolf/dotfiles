@@ -55,6 +55,7 @@ alias ll='ls -la'
 alias vi='vim'
 alias py='python'
 alias og='open_github'
+alias brew="PATH=/usr/local/bin:/usr/bin:/bin:/usr/sbin:/sbin brew"
 
 # ghq alias
 alias gh='cd $(ghq root)/$(ghq list | peco)'
@@ -152,4 +153,7 @@ eval "$(hub alias -s)"
 if [ -e "${HOME}/.bashrc.local" ]; then
   source "${HOME}/.bashrc.local"
 fi
+
+eval "$(anyenv init -)"
+export PATH="$HOME/.anyenv/bin:$PATH"
 
