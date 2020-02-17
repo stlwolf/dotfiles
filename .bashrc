@@ -28,6 +28,7 @@ else
     PS1='\[\e[0;37m\]${NAME}\[\e[0;37m\][\t]\[\e[0;37m\]: \[\e[1;37m\]\w\n\[\e[1;33m\]h:\! j:\j \[\e[0;34m\]\$\[\e[m\] '
 fi
 
+#### peco commands
 ## find 使って peco る
 alias fvi='vi `find . | peco`'
 
@@ -47,6 +48,26 @@ peco-select-history() {
     READLINE_POINT=${#l}
 }
 bind -x '"\C-r": peco-select-history'
+
+peco-branch-name() {
+    declare l=$(git branch --sort=-authordate | grep -v -e '->' -e '*' | perl -pe 's/^\h+//g' | perl -pe 's#^remotes/origin/###' | perl -nle 'print if !$c{$_}++' | peco)
+    READLINE_LINE="$READLINE_LINE$l"
+    READLINE_POINT=${#l}
+}
+bind -x '"\C-f": peco-branch-name'
+
+# リモートブランチの git checkout を peco で簡単にする
+# https://qiita.com/ymm1x/items/a735e82244a877ac4d23
+gcop() {
+  git branch --sort=-authordate |
+      grep -v -e '->' -e '*' |
+      perl -pe 's/^\h+//g' |
+      perl -pe 's#^remotes/origin/###' |
+      perl -nle 'print if !$c{$_}++' |
+      peco |
+      xargs git checkout
+}
+alias gcp=gcop
 
 ## os alias
 alias ll='ls -la'
@@ -144,7 +165,6 @@ function tmux_ssh() {
     command ssh $@
   fi
 }
-
 alias ssh=tmux_ssh
 
 eval "$(hub alias -s)"
