@@ -50,7 +50,7 @@ peco-select-history() {
 bind -x '"\C-r": peco-select-history'
 
 peco-branch-name() {
-    declare l=$(git branch --sort=-authordate | grep -v -e '->' -e '*' | perl -pe 's/^\h+//g' | perl -pe 's#^remotes/origin/###' | perl -nle 'print if !$c{$_}++' | peco)
+    declare l=$(git branch --sort=-authordate | grep -v -e '->' | perl -pe 's/\*//g' | perl -pe 's/^\h+//g' | perl -pe 's#^remotes/origin/###' | perl -nle 'print if !$c{$_}++' | peco)
     READLINE_LINE="$READLINE_LINE$l"
     READLINE_POINT=${#l}
 }
