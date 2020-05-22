@@ -20,6 +20,12 @@ hook_post_update = '''
 [[plugins]] # unite all inferface
 repo = 'Shougo/denite.nvim'
 
+[[plugins]] # color scheme
+repo = 'cocopon/iceberg.vim'
+
+[[plugins]] # color scheme
+repo = 'raphamorim/lucario'
+
 # FIXME: Not installed yet. https://github.com/Shougo/deoplete.nvim
 #[[plugins]]
 #repo = 'Shougo/deoplete.nvim'

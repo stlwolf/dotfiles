@@ -138,12 +138,18 @@ nnoremap sQ :<C-u>bd<CR>
 nnoremap sb :<C-u>Unite buffer_tab -buffer-name=file<CR>
 nnoremap sB :<C-u>Unite buffer -buffer-name=file<CR>
 
-" The best flat theme for Vim, Atom, Sublime Text, Jetbrains Editors, Terminal.app, iTerm, Xcode and XTerm
-" https://github.com/raphamorim/lucario
 syntax enable
-colorscheme lucario
+" https://github.com/cocopon/iceberg.vim
+colorscheme iceberg
+
+highlight Normal ctermbg=NONE guibg=NONE
+highlight NonText ctermbg=NONE guibg=NONE
+highlight LineNr ctermbg=NONE guibg=NONE
+highlight Folded ctermbg=NONE guibg=NONE
+highlight EndOfBuffer ctermbg=NONE guibg=NONE"
+
 " 256色,truecolor,背景色
-set t_Co=256 termguicolors background=dark
+set t_Co=256 termguicolors
 
 " 行末スペース削除
 autocmd BufWritePre * :%s/\s\+$//ge

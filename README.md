@@ -19,12 +19,12 @@
   - [dein](https://github.com/Shougo/dein.vim)
 
 - Color scheme
+  - [iceberg](https://github.com/cocopon/iceberg.vim)
   - [lucario](https://github.com/raphamorim/lucario)
   - [tender](https://github.com/jacoborus/tender.vim)
 
 - Fonts
   - [自家製Rounded M+](http://jikasei.me/font/rounded-mplus/)
-  - [BackUP](https://github.com/stlwolf/fonts)
 
 #### Env
 
