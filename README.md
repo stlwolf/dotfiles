@@ -24,7 +24,7 @@
   - [tender](https://github.com/jacoborus/tender.vim)
 
 - Fonts
-  - [自家製Rounded M+](http://jikasei.me/font/rounded-mplus/)
+  - [Rounded Mgen+](http://jikasei.me/font/rounded-mgenplus/)
 
 #### Env
 
