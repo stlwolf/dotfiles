@@ -125,6 +125,27 @@
           }
         }
       },
+      "gcc": {
+        "version": "9.3.0_1",
+        "bottle": {
+          "cellar": "/usr/local/Cellar",
+          "prefix": "/usr/local",
+          "files": {
+            "catalina": {
+              "url": "https://homebrew.bintray.com/bottles/gcc-9.3.0_1.catalina.bottle.tar.gz",
+              "sha256": "57e53d66ad43fe05b5a2f93d6a7cfd472713ac03e9d9c9d0d0187cdc7a273153"
+            },
+            "mojave": {
+              "url": "https://homebrew.bintray.com/bottles/gcc-9.3.0_1.mojave.bottle.tar.gz",
+              "sha256": "de8319322428721741a0dc41dfdf2eece80e0215a7a4a861e0e206a9bfbca583"
+            },
+            "high_sierra": {
+              "url": "https://homebrew.bintray.com/bottles/gcc-9.3.0_1.high_sierra.bottle.tar.gz",
+              "sha256": "e50b9cfee063619515a8f164485b3f730077f21b49b7bb30cc5a600ddf577a83"
+            }
+          }
+        }
+      },
       "ghq": {
         "version": "1.1.0",
         "bottle": {
@@ -420,10 +441,22 @@
       }
     },
     "cask": {
+      "google-japanese-ime": {
+        "version": "latest",
+        "options": {
+          "full_name": "google-japanese-ime"
+        }
+      },
       "google-chrome": {
         "version": "83.0.4103.61",
         "options": {
           "full_name": "google-chrome"
+        }
+      },
+      "firefox": {
+        "version": "76.0.1",
+        "options": {
+          "full_name": "firefox"
         }
       },
       "karabiner-elements": {
@@ -443,18 +476,6 @@
         "options": {
           "full_name": "docker"
         }
-      },
-      "google-japanese-ime": {
-        "version": "latest",
-        "options": {
-          "full_name": "google-japanese-ime"
-        }
-      },
-      "firefox": {
-        "version": "76.0.1",
-        "options": {
-          "full_name": "firefox"
-        }
       }
     }
   },
@@ -463,7 +484,7 @@
       "catalina": {
         "HOMEBREW_VERSION": "2.2.17",
         "HOMEBREW_PREFIX": "/usr/local",
-        "Homebrew/homebrew-core": "1c21e2d10cb0da4fe4f09235a100d48fedafda80",
+        "Homebrew/homebrew-core": "28bee22fbbce1c5dd29ede0b03308f9a3eb8dacd",
         "CLT": "11.5.0.0.1.1588476445",
         "Xcode": "11.4.1",
         "macOS": "10.15.4"
