@@ -41,3 +41,4 @@ cask 'the-unarchiver'
 cask 'sequel-pro'
 
 mas 'Skitch', id: 425955336
+mas 'ForkLift', id: 412448059

@@ -5,7 +5,7 @@
         "revision": "36df2d1bcf321bc041c0bf34cdf301ab3ad8affb"
       },
       "homebrew/cask-fonts": {
-        "revision": "583ef3da7d333d8f8378e868ce2b4541adc62d12"
+        "revision": "1837305bf78ba5e542595db9c31a382bb44fa394"
       }
     },
     "brew": {
@@ -567,6 +567,10 @@
       "Skitch": {
         "id": "425955336",
         "version": "2.8.4"
+      },
+      "ForkLift": {
+        "id": "412448059",
+        "version": "2.6.6"
       }
     }
   },
@@ -575,7 +579,7 @@
       "catalina": {
         "HOMEBREW_VERSION": "2.2.17",
         "HOMEBREW_PREFIX": "/usr/local",
-        "Homebrew/homebrew-core": "7a15b560ff97e77978e723d9ab1b9cff65136c19",
+        "Homebrew/homebrew-core": "da59b5952ea07d7e0021138167b5a69ebeada4b5",
         "CLT": "11.5.0.0.1.1588476445",
         "Xcode": "11.4.1",
         "macOS": "10.15.4"
