@@ -71,6 +71,7 @@ alias gcp=gcop
 
 ## os alias
 alias ll='ls -la'
+alias exa='exa -la'
 
 # application alias
 alias vi='vim'
