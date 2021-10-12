@@ -80,8 +80,8 @@ alias og='open_github'
 alias brew="PATH=/usr/local/bin:/usr/bin:/bin:/usr/sbin:/sbin brew"
 
 # ghq alias
-alias gh='cd $(ghq root)/$(ghq list | peco)'
-alias ghh='hub browse $(ghq list | peco | cut -d "/" -f 2,3)'
+alias gr='cd $(ghq root)/$(ghq list | peco)'
+alias grh='hub browse $(ghq list | peco | cut -d "/" -f 2,3)'
 
 # git alias
 alias gpm='git pull origin master'
