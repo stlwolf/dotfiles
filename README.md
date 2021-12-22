@@ -6,11 +6,25 @@
 
 #### Terminal
 
+- Set brew path
+```
+  echo 'eval "$(/opt/homebrew/bin/brew shellenv)"' >> .bashrc
+  eval "$(/opt/homebrew/bin/brew shellenv)"
+```
+
 - Change brew bash
-```
-  sudo bash -c 'echo /usr/local/bin/bash >> /etc/shells'
-  chsh -s /usr/local/bin/bash
-```
+
+  - M1X ~
+  ```
+    sudo bash -c 'echo /opt/homebrew/bin/brew >> /etc/shells'
+    chsh -s /opt/homebrew/bin/brew
+  ```
+
+  - IntelCPU
+  ```
+    sudo bash -c 'echo /usr/local/bin/bash >> /etc/shells'
+    chsh -s /usr/local/bin/bash
+  ```
 
 #### Editor
 
