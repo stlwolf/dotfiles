@@ -33,6 +33,7 @@ brew 'yarn'
 cask 'appcleaner'
 cask 'bitwarden'
 cask 'coteditor'
+cask 'deepl'
 cask 'docker'
 cask 'dropbox'
 cask 'firefox'
@@ -43,11 +44,11 @@ cask 'hyperswitch'
 cask 'inkdrop'
 cask 'intellij-idea'
 cask 'iterm2'
+cask 'itsycal'
 cask 'karabiner-elements'
-cask 'libreoffice'
 cask 'the-unarchiver'
 cask 'sequel-ace'
 cask 'tor-browser'
 
+mas 'Slack', id: 618783545
 mas 'Skitch', id: 425955336
-mas 'ForkLift', id: 412448059
