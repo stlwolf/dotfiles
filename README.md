@@ -8,7 +8,6 @@
 
 - Set brew path
 ```
-  echo 'eval "$(/opt/homebrew/bin/brew shellenv)"' >> .bashrc
   eval "$(/opt/homebrew/bin/brew shellenv)"
 ```
 

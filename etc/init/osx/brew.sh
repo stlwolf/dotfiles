@@ -13,3 +13,5 @@ else
     ruby -e "$(curl -fsSL https://raw.githubusercontent.com/Homebrew/install/master/install)" &&
         brew doctor
 fi
+
+eval "$(/opt/homebrew/bin/brew shellenv)"

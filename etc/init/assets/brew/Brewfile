@@ -37,7 +37,7 @@ cask 'deepl'
 cask 'docker'
 cask 'dropbox'
 cask 'firefox'
-cask 'google-backup-and-sync'
+cask 'google-drive'
 cask 'google-chrome'
 cask 'google-japanese-ime'
 cask 'hyperswitch'
@@ -48,7 +48,6 @@ cask 'itsycal'
 cask 'karabiner-elements'
 cask 'the-unarchiver'
 cask 'sequel-ace'
+cask 'slack'
 cask 'tor-browser'
 
-mas 'Slack', id: 618783545
-mas 'Skitch', id: 425955336
