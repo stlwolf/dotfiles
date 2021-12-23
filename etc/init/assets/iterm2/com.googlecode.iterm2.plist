@@ -249,8 +249,6 @@
 	<string>~/Pictures</string>
 	<key>NSNavPanelExpandedSizeForOpenMode</key>
 	<string>{799, 448}</string>
-	<key>NSNavPanelMediaBrowserTypeForOpenModeKey</key>
-	<integer>1</integer>
 	<key>NSQuotedKeystrokeBinding</key>
 	<string></string>
 	<key>NSRepeatCountBinding</key>
@@ -293,9 +291,9 @@
 		<integer>1</integer>
 	</dict>
 	<key>NSWindow Frame NSNavPanelAutosaveName</key>
-	<string>702 320 799 448 0 0 1920 1080 </string>
+	<string>704 336 799 448 0 0 1920 1080 </string>
 	<key>NSWindow Frame iTerm Window 0</key>
-	<string>432 226 1005 560 0 0 1920 1057 </string>
+	<string>506 277 730 702 0 0 1920 1080 </string>
 	<key>New Bookmarks</key>
 	<array>
 		<dict>
@@ -471,7 +469,7 @@
 				<real>0.069047316908836365</real>
 			</dict>
 			<key>Background Image Location</key>
-			<string>~/Pictures/OxLzCgb.jpg</string>
+			<string>/Users/eddy/Pictures/OxLzCgb.jpg</string>
 			<key>Background Image Mode</key>
 			<integer>2</integer>
 			<key>Badge Color</key>
@@ -488,7 +486,7 @@
 				<real>1</real>
 			</dict>
 			<key>Blend</key>
-			<real>0.41349971810567021</real>
+			<real>0.47021585051546405</real>
 			<key>Blinking Cursor</key>
 			<false/>
 			<key>Blur</key>
@@ -951,28 +949,19 @@
 	<array>
 		<string>3.3.10</string>
 	</array>
-	<key>NoSyncBFPRecents</key>
-	<array>
-		<string>Rounded-X Mgen+ 1mn</string>
-		<string>Monaco</string>
-	</array>
 	<key>NoSyncFrame_SharedPreferences</key>
 	<dict>
 		<key>screenFrame</key>
 		<string>{{0, 0}, {1920, 1080}}</string>
 		<key>topLeft</key>
-		<string>{636, 846}</string>
+		<string>{638, 862}</string>
 	</dict>
 	<key>NoSyncInstallationId</key>
-	<string>808A4B52-CCE6-4B0D-B114-A10AB8A0CD14</string>
+	<string>D652C6E5-B098-4437-B411-603D1D434AC8</string>
 	<key>NoSyncLaunchExperienceControllerRunCount</key>
-	<integer>4</integer>
-	<key>NoSyncNeverRemindPrefsChangesLostForFile</key>
-	<true/>
-	<key>NoSyncNeverRemindPrefsChangesLostForFile_selection</key>
-	<integer>0</integer>
+	<integer>3</integer>
 	<key>NoSyncNextAnnoyanceTime</key>
-	<real>612025707.40432203</real>
+	<real>612053846.54649103</real>
 	<key>NoSyncOnboardingWindowHasBeenShown</key>
 	<true/>
 	<key>NoSyncRecordedVariables</key>
@@ -1480,6 +1469,14 @@
 				<key>isTerminal</key>
 				<true/>
 				<key>name</key>
+				<string>currentSession.terminalIconName</string>
+				<key>nonterminalContext</key>
+				<integer>0</integer>
+			</dict>
+			<dict>
+				<key>isTerminal</key>
+				<true/>
+				<key>name</key>
 				<string>currentSession.presentationName</string>
 				<key>nonterminalContext</key>
 				<integer>0</integer>
@@ -1658,7 +1655,7 @@
 		</array>
 	</dict>
 	<key>NoSyncTipOfTheDayEligibilityBeganTime</key>
-	<real>611852907.40417397</real>
+	<real>611881046.54631102</real>
 	<key>OpenArrangementAtStartup</key>
 	<false/>
 	<key>OpenNoWindowsAtStartup</key>
@@ -1670,11 +1667,11 @@
 	<key>SUFeedAlternateAppNameKey</key>
 	<string>iTerm</string>
 	<key>SUFeedURL</key>
-	<string>https://iterm2.com/appcasts/final_new.xml?shard=38</string>
+	<string>https://iterm2.com/appcasts/final_new.xml?shard=37</string>
 	<key>SUHasLaunchedBefore</key>
 	<true/>
 	<key>SULastCheckTime</key>
-	<date>2020-05-22T15:11:41Z</date>
+	<date>2020-05-24T07:30:41Z</date>
 	<key>SUSendProfileInfo</key>
 	<false/>
 	<key>SoundForEsc</key>
