@@ -4,6 +4,9 @@
 # shift+gで末尾
 bind generic G move-last-line
 
+# 空commit
+bind generic L !git commit --allow-empty
+
 #############################
 # 画面分割系
 #############################
@@ -11,3 +14,18 @@ bind generic G move-last-line
 # set vertical-split = auto
 # 横分割に強制する
 set vertical-split = no
+
+# main view の左端にコミットIDを表示する
+set main-view = id date author:email-user commit-title:graph=yes,refs=yes
+
+# 行数表示をON
+set blob-view-line-number = yes
+set blame-view-line-number = yes
+
+# utf-8 文字で画面描画する (~でトグル)
+set line-graphics = utf-8
+# タブサイズ
+set tab-size = 4
+
+# 差分表示に diff-highlight を使う (要 tig 2.2.1 以降. diff-highlight が $PATH にあること)
+set diff-highlight = true
