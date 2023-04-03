@@ -7,6 +7,15 @@ set -eu
 
 is_osx || die "osx only"
 
+# Check if the system is running on Apple Silicon (M1) or using Rosetta 2
+if [ "$(uname -m)" = "arm64" ] || [ "$(sysctl -in sysctl.proc_translated)" = "1" ]; then
+    # M1 Mac
+    eval "$(/opt/homebrew/bin/brew shellenv)"
+else
+    # Intel Mac
+    eval "$(/usr/local/bin/brew shellenv)"
+fi
+
 if has "brew"; then
     brew tap Homebrew/bundle 2>/dev/null
 
