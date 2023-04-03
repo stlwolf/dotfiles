@@ -15,7 +15,7 @@
 
   - M1X ~
   ```
-    sudo bash -c 'echo /opt/homebrew/bin/brew >> /etc/shells'
+    sudo bash -c 'echo /opt/homebrew/bin/bash >> /etc/shells'
     chsh -s /opt/homebrew/bin/brew
   ```
 

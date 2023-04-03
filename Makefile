@@ -10,7 +10,7 @@ help:
 	@echo "make deploy         #=> Create symlink to home directory"
 	@echo "make init           #=> Setup environment settings"
 	@echo "make install        #=> Run make update, deploy, init"
-	@echo "make clean          #=> Remove the dotfiles and this repo"
+	@echo "make clean          #=> Remove the dotfiles"
 	@echo "make anyenv         #=> Setup anyenv. Init and install plugins"
 
 list:

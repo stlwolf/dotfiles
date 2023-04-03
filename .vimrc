@@ -1,7 +1,7 @@
 """""""""""""""""""""""""""""
 " Basic settings
 """""""""""""""""""""""""""""
-syntax on
+syntax enable
 set encoding=utf-8
 set fileencoding=utf-8 fileformat=unix
 set showmatch
@@ -138,7 +138,6 @@ nnoremap sQ :<C-u>bd<CR>
 nnoremap sb :<C-u>Unite buffer_tab -buffer-name=file<CR>
 nnoremap sB :<C-u>Unite buffer -buffer-name=file<CR>
 
-syntax enable
 " https://github.com/cocopon/iceberg.vim
 colorscheme iceberg
 
@@ -148,12 +147,16 @@ highlight LineNr ctermbg=NONE guibg=NONE
 highlight Folded ctermbg=NONE guibg=NONE
 highlight EndOfBuffer ctermbg=NONE guibg=NONE"
 
-" 256色,truecolor,背景色
-set t_Co=256 termguicolors
-
 " 行末スペース削除
 autocmd BufWritePre * :%s/\s\+$//ge
 
 """" Last line.
 " ファイルタイプ関連を有効にする
 filetype plugin indent on
+
+" TrueColor 改めて修正
+" https://www.pandanoir.info/entry/2019/11/02/202146
+set termguicolors
+" $TERMがxterm以外のときは以下を設定する必要がある。
+let &t_8f = "\<Esc>[38;2;%lu;%lu;%lum" " 文字色
+let &t_8b = "\<Esc>[48;2;%lu;%lu;%lum" " 背景色
