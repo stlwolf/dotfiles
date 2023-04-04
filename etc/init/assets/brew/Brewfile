@@ -66,6 +66,7 @@ cask 'karabiner-elements'
 cask 'sequel-ace'
 cask 'slack'
 cask 'the-unarchiver'
+cask 'hammerspoon'
 
 #mas 'Be Focused Pro', id: 961632517
 #mas 'iMovie', id: 408981434
