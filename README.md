@@ -34,6 +34,7 @@
   - [iceberg](https://github.com/cocopon/iceberg.vim)
   - [lucario](https://github.com/raphamorim/lucario)
   - [tender](https://github.com/jacoborus/tender.vim)
+  - [gruvbox](https://github.com/morhetz/gruvbox)
 
 - Fonts
   - [Rounded Mgen+](http://jikasei.me/font/rounded-mgenplus/)

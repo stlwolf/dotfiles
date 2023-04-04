@@ -1,6 +1,6 @@
 REPOS_PATH        := $(HOME)/work/repos
 
-DOTFILES_EXCLUDES := .DS_Store .git .gitmodules
+DOTFILES_EXCLUDES := .idea .DS_Store .git .gitmodules .gitignore
 DOTFILES_TARGET   := $(wildcard .??*) bin
 DOTFILES_FILES    := $(filter-out $(DOTFILES_EXCLUDES), $(DOTFILES_TARGET))
 
