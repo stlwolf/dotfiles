@@ -1,0 +1,19 @@
+#!/bin/bash
+
+# Get the current working directory
+current_dir=$(pwd)
+
+# Define the base path where your repositories are stored
+base_path="$HOME/work/repos/github.com"
+
+# Check if the current working directory is under the base_path
+if [[ $current_dir == $base_path* ]]; then
+    # Remove the base_path from the current working directory
+    repo_path=${current_dir#"$base_path/"}
+
+    # Open the GitHub URL in the default browser
+    open "https://github.com/$repo_path"
+else
+    echo "Not in a GitHub repository directory."
+fi
+
