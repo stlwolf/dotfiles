@@ -23,10 +23,24 @@ fi
 
 NAME='HOME'
 if [ -f `brew --prefix`/etc/bash_completion.d/git-completion.bash ]; then
-    PS1='\[\e[0;37m\]${NAME}\[\e[0;37m\][\t]\[\e[0;37m\]: \[\e[1;37m\]\w\n\[\e[1;33m\]h:\! j:\j\[\e[0;36m\]$(__git_ps1) \[\e[0;34m\]\$\[\e[m\] '
+    PS1='\[\e[0;37m\]${NAME}\[\e[0;37m\][\t]\[\e[0;37m\]: \[\e[1;37m\]\w\n\[\e[1;33m\]h:\! j:\j\[\e[0;36m\]$(__git_ps1) \[\e[0;34m\]\$\[\e[m\]'
 else
-    PS1='\[\e[0;37m\]${NAME}\[\e[0;37m\][\t]\[\e[0;37m\]: \[\e[1;37m\]\w\n\[\e[1;33m\]h:\! j:\j \[\e[0;34m\]\$\[\e[m\] '
+    PS1='\[\e[0;37m\]${NAME}\[\e[0;37m\][\t]\[\e[0;37m\]: \[\e[1;37m\]\w\n\[\e[1;33m\]h:\! j:\j \[\e[0;34m\]\$\[\e[m\]'
 fi
+
+# View aws profile
+aws_prof() {
+  local profile="${AWS_PROFILE:-default}"
+
+  echo -e "\033[1;34maws:(\033[1;33m${profile}\033[1;34m)\033[0m"
+}
+remove_last_dollar() {
+  local ps1_value="$1"
+  local ps1_without_dollar="${ps1_value%\\\$*}"
+  echo "$ps1_without_dollar"
+}
+# PS1="${PS1%\\\$} $(aws_prof) \$ "
+PS1="$(remove_last_dollar "$PS1")$(aws_prof) \$ "
 
 #### peco commands
 ## find 使って peco る
@@ -177,3 +191,4 @@ fi
 eval "$(anyenv init -)"
 export PATH="$HOME/.anyenv/bin:$PATH"
 
+alias awsp="source /Users/eddy/work/repos/github.com/stlwolf/awsp/run.sh"
