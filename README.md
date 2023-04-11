@@ -27,8 +27,8 @@
 
 #### Repository
 
-- [fork/awsp](https://github.com/stlwolf/awsp)
-  - AWSP - AWS Profile Switcher
+- AWSP - AWS Profile Switcher
+  - [fork/awsp](https://github.com/stlwolf/awsp)
 
 #### Editor
 
