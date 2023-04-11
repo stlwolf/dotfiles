@@ -1,0 +1,51 @@
+#!/bin/sh
+
+main() {
+  mfa_code=""
+
+  role_arn=$(aws configure get $AWS_DEFAULT_PROFILE.role_arn)
+
+  if [ -z "$role_arn" ]; then
+    echo "Error: role_arn is not defined in the AWS configuration."
+    return 1
+  fi
+
+  while getopts "a:" opt; do
+    case $opt in
+      a)
+        mfa_code="$OPTARG"
+        ;;
+      *)
+        echo "Usage: $0 [-a mfa_code]"
+        exit 1
+        ;;
+    esac
+  done
+
+  mfa_serial=$(aws configure get $AWS_DEFAULT_PROFILE.mfa_serial)
+
+  if [ -n "$mfa_serial" ]; then
+    serial_number_option="--serial-number $mfa_serial"
+  else
+    serial_number_option=""
+  fi
+
+  if [ -n "$mfa_code" ]; then
+    token_code_option="--token-code $mfa_code"
+  else
+    token_code_option=""
+  fi
+
+  AWS_STS_CREDENTIALS=`aws sts assume-role \
+    --profile default \
+    --role-arn $role_arn \
+    --role-session-name $AWS_DEFAULT_PROFILE-session \
+    $serial_number_option \
+    $token_code_option`
+
+  AWS_ACCESS_KEY_ID=`echo "${AWS_STS_CREDENTIALS}" | jq -r '.Credentials.AccessKeyId'`
+  AWS_SECRET_ACCESS_KEY=`echo "${AWS_STS_CREDENTIALS}" | jq -r '.Credentials.SecretAccessKey'`
+  AWS_SESSION_TOKEN=`echo "${AWS_STS_CREDENTIALS}" | jq -r '.Credentials.SessionToken'`
+}
+
+main "$@"

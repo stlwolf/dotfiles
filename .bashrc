@@ -39,7 +39,6 @@ remove_last_dollar() {
   local ps1_without_dollar="${ps1_value%\\\$*}"
   echo "$ps1_without_dollar"
 }
-# PS1="${PS1%\\\$} $(aws_prof) \$ "
 PS1="$(remove_last_dollar "$PS1")$(aws_prof) \$ "
 
 #### peco commands
@@ -102,6 +101,9 @@ alias gb='git branch'
 alias gc='git checkout'
 alias gf='git diff'
 alias gs='git status'
+
+# https://dev.classmethod.jp/articles/aws-cli-switch-role-script/
+alias scr='source ~/bin/scr'
 
 # ターミナルマルチプレクサ tmux をカスタマイズする
 # http://qiita.com/b4b4r07/items/01359e8a3066d1c37edc
