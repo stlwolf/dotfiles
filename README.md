@@ -4,7 +4,7 @@
 - KeyRepeat
   - `defaults write -g KeyRepeat 1`
 
-#### Terminal
+#### Shell
 
 - Set brew path
 ```
@@ -24,6 +24,11 @@
     sudo bash -c 'echo /usr/local/bin/bash >> /etc/shells'
     chsh -s /usr/local/bin/bash
   ```
+
+#### Repository
+
+- [fork/awsp](https://github.com/stlwolf/awsp)
+  - AWSP - AWS Profile Switcher
 
 #### Editor
 
