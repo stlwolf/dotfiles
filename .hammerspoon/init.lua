@@ -32,5 +32,5 @@ function toggleQuickTimePlayback()
 end
 
 -- ショートカットキーの設定
-hs.hotkey.bind({"ctrl", "alt"}, "P", toggleQuickTimePlayback)
+hs.hotkey.bind({"ctrl", "cmd"}, "A", toggleQuickTimePlayback)
 
