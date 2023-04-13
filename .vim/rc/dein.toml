@@ -115,7 +115,7 @@ hook_add = '''
     set laststatus=2
 
     let g:lightline = {
-            \ 'colorscheme': 'tender',
+            \ 'colorscheme': 'Tomorrow_Night_Blue',
             \ 'mode_map': {'c': 'NORMAL'},
             \ 'active': {
             \   'left': [

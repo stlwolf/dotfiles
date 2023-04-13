@@ -83,8 +83,9 @@ gcop() {
 alias gcp=gcop
 
 ## os alias
-alias ll='ls -la'
+alias ls='ls -la'
 alias exa='exa -la'
+alias ll='exa -la'
 
 # application alias
 alias vi='vim'

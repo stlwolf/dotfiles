@@ -28,10 +28,35 @@ config.use_fancy_tab_bar = false
 config.scrollback_lines = 8192
 config.enable_scroll_bar = true
 
+-- https://zenn.dev/link/comments/7e0e1d3d8619dc
+function random_color_scheme()
+  math.randomseed(os.time())
+  local schemes = {
+    "iceberg-dark",
+    "Iiamblack (terminal.sexy)",
+    "Material (Gogh)",
+    "Mellow Purple (base16)",
+    "Atom",
+    "Chalkboard",
+    "Dracula+",
+    "nord",
+  }
+  local i = math.random(#schemes)
+  return schemes[i]
+end
+
+wezterm.on('random-color-scheme', function(window, pane)
+  local overrides = window:get_config_overrides() or {}
+  scheme = random_color_scheme()
+  overrides.color_scheme = scheme
+  window:set_config_overrides(overrides)
+end)
+
 config.keys = {
   { key = 'f', mods = 'CTRL|CMD', action = wezterm.action.ToggleFullScreen },
-  { key = 'UpArrow', mods = 'SHIFT', action = act.ScrollToPrompt(-1) },
-  { key = 'DownArrow', mods = 'SHIFT', action = act.ScrollToPrompt(1) },
+  { key = 'A', mods = 'CTRL', action = wezterm.action.EmitEvent 'random-color-scheme' },
+--   { key = 'UpArrow', mods = 'SHIFT', action = act.ScrollToPrompt(-1) },
+--   { key = 'DownArrow', mods = 'SHIFT', action = act.ScrollToPrompt(1) },
 }
 
 config.window_background_image = ''
@@ -47,4 +72,5 @@ config.window_background_image_hsb = {
   -- You can adjust the saturation also.
   saturation = 1.0,
 }
+
 return config

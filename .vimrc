@@ -139,7 +139,8 @@ nnoremap sb :<C-u>Unite buffer_tab -buffer-name=file<CR>
 nnoremap sB :<C-u>Unite buffer -buffer-name=file<CR>
 
 " https://github.com/cocopon/iceberg.vim
-colorscheme iceberg
+" colorscheme iceberg
+colorscheme lucario
 
 highlight Normal ctermbg=NONE guibg=NONE
 highlight NonText ctermbg=NONE guibg=NONE
@@ -154,8 +155,7 @@ autocmd BufWritePre * :%s/\s\+$//ge
 " ファイルタイプ関連を有効にする
 filetype plugin indent on
 
-" TrueColor 改めて修正
-" https://www.pandanoir.info/entry/2019/11/02/202146
+" TrueColor
 set termguicolors
 " $TERMがxterm以外のときは以下を設定する必要がある。
 let &t_8f = "\<Esc>[38;2;%lu;%lu;%lum" " 文字色
