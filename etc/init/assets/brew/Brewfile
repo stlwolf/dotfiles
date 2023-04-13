@@ -67,6 +67,7 @@ cask 'sequel-ace'
 cask 'slack'
 cask 'the-unarchiver'
 cask 'hammerspoon'
+cask 'font-hack-nerd-font'
 
 #mas 'Be Focused Pro', id: 961632517
 #mas 'iMovie', id: 408981434

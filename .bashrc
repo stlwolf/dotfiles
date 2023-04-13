@@ -23,9 +23,9 @@ fi
 
 NAME='HOME'
 if [ -f `brew --prefix`/etc/bash_completion.d/git-completion.bash ]; then
-    PS1='\[\e[0;37m\]${NAME}\[\e[0;37m\][\t]\[\e[0;37m\]: \[\e[1;37m\]\w\n\[\e[1;33m\]h:\! j:\j\[\e[0;36m\]$(__git_ps1) \[\e[0;34m\]\$\[\e[m\]'
+    PS1='\[\e[0;37m\]${NAME}\[\e[0;37m\][\t]\[\e[0;37m\]: \[\e[1;37m\]\w\n\[\e[0;36m\]$(__git_ps1) \[\e[0;34m\]\$\[\e[m\]'
 else
-    PS1='\[\e[0;37m\]${NAME}\[\e[0;37m\][\t]\[\e[0;37m\]: \[\e[1;37m\]\w\n\[\e[1;33m\]h:\! j:\j \[\e[0;34m\]\$\[\e[m\]'
+    PS1='\[\e[0;37m\]${NAME}\[\e[0;37m\][\t]\[\e[0;37m\]: \[\e[1;37m\]\w\n\[\e[0;34m\]\$\[\e[m\]'
 fi
 
 # View aws profile
@@ -221,3 +221,8 @@ eval "$(anyenv init -)"
 export PATH="$HOME/.anyenv/bin:$PATH"
 
 alias awsp="source /Users/eddy/work/repos/github.com/stlwolf/awsp/run.sh"
+
+eval "$(starship init bash)"
+export STARSHIP_CONFIG=~/.config/starship/starship.toml
+
+export PATH="$PATH:/opt/homebrew/share/git-core/contrib/diff-highlight"

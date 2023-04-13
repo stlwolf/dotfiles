@@ -1,0 +1,50 @@
+# Get editor completions based on the config schema
+"$schema" = 'https://starship.rs/config-schema.json'
+
+# Inserts a blank line between shell prompts
+add_newline = true
+
+# Replace the '❯' symbol in the prompt with '➜'
+[character] # The name of the module we are configuring is 'character'
+success_symbol = '[>>](bold blue)'
+error_symbol = '[Failed >>](bold red)'
+
+# Disable the package module, hiding it from the prompt completely
+[package]
+disabled = true
+
+[aws]
+# format = 'on [$symbol$profile\($region\)]($style) '
+format = 'on [$symbol$profile]($style) '
+style = 'bold blue'
+symbol = '🅰 '
+
+[aws.region_aliases]
+ap-northeast-1 = 'tokyo'
+
+[docker_context]
+disabled = true
+
+[directory]
+format = '[\[HOME\]](33) [$path]($style)[$read_only]($read_only_style) '
+truncation_length = 50
+
+[time]
+disabled = false
+
+[java]
+disabled = true
+
+
+[git_status]
+conflicted = '🏳'
+ahead = '🏎💨'
+behind = '😰'
+diverged = '😵'
+up_to_date = '✓'
+untracked = '?'
+stashed = '📦'
+modified = '📝'
+staged = '[++\($count\)](green)'
+renamed = '👅'
+deleted = '🗑'
