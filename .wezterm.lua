@@ -10,8 +10,9 @@ if wezterm.config_builder then
   config = wezterm.config_builder()
 end
 
-config.color_scheme = 'iceberg-dark'
-config.window_background_opacity = 0.9
+config.default_cwd = ''
+
+config.window_background_opacity = 0.8
 
 config.font = wezterm.font("Rounded-X Mgen+ 1mn", {weight="Medium", stretch="Normal", style="Normal"})
 config.font_size = 18.0
@@ -36,9 +37,6 @@ function random_color_scheme()
     "Iiamblack (terminal.sexy)",
     "Material (Gogh)",
     "Mellow Purple (base16)",
-    "Atom",
-    "Chalkboard",
-    "Dracula+",
     "nord",
   }
   local i = math.random(#schemes)
