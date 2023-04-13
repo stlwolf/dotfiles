@@ -12,13 +12,14 @@ end
 
 config.default_cwd = ''
 
+config.color_scheme = 'iceberg-dark'
 config.window_background_opacity = 0.8
 
-config.font = wezterm.font("Rounded-X Mgen+ 1mn", {weight="Medium", stretch="Normal", style="Normal"})
+config.font = wezterm.font('Rounded-X Mgen+ 1mn', {weight='Medium', stretch='Normal', style='Normal'})
 config.font_size = 18.0
 
 config.hide_tab_bar_if_only_one_tab = true
-config.window_decorations = "RESIZE"
+config.window_decorations = 'RESIZE'
 config.initial_cols = 180
 config.initial_rows = 50
 -- config.window_padding = { left = 0, right = 0, top = 0, bottom = 0 }
@@ -33,11 +34,11 @@ config.enable_scroll_bar = true
 function random_color_scheme()
   math.randomseed(os.time())
   local schemes = {
-    "iceberg-dark",
-    "Iiamblack (terminal.sexy)",
-    "Material (Gogh)",
-    "Mellow Purple (base16)",
-    "nord",
+    'iceberg-dark',
+    'Iiamblack (terminal.sexy)',
+    'Material (Gogh)',
+    'Mellow Purple (base16)',
+    'nord',
   }
   local i = math.random(#schemes)
   return schemes[i]
