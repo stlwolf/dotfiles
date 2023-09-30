@@ -3,6 +3,7 @@ tap 'homebrew/bundle'
 tap 'homebrew/cask'
 tap 'homebrew/cask-fonts'
 tap 'homebrew/core'
+tap 'FelixKratz/formulae'
 
 brew 'act'
 brew 'anyenv'
@@ -46,6 +47,8 @@ brew 'tmux'
 brew 'tree'
 brew 'wget'
 brew 'yarn'
+brew 'sketchybar'
+brew 'koekeishiya/formulae/yabai'
 
 cask 'appcleaner'
 cask 'bitwarden'
@@ -72,7 +75,7 @@ cask 'font-hack-nerd-font'
 #mas 'Be Focused Pro', id: 961632517
 #mas 'iMovie', id: 408981434
 #mas 'Keynote', id: 409183694
-#mas 'Kindle', id: 405399194
+#mas 'Kindle', id: 302584613
 #mas 'Microsoft Excel', id: 462058435
 #mas 'Microsoft PowerPoint', id: 462062816
 #mas 'Moom', id: 419330170
