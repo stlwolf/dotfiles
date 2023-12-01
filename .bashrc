@@ -110,8 +110,8 @@ alias gcp=gcop
 
 ## os alias
 alias ls='ls -la'
-alias exa='exa -la'
-alias ll='exa -la'
+alias eza='eza -la'
+alias ll='eza -la'
 
 # application alias
 alias vi='vim'
