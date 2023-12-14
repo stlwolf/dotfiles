@@ -46,16 +46,23 @@
 
 #### Env
 
-- [anyenv](https://github.com/anyenv/anyenv)
+- [asdf](https://asdf-vm.com/)
 ```shell
-  # Makefile
-  make anyenv
+  # plugin install example
+  
+  # nodejs
+  asdf plugin-add nodejs
+  asdf install nodejs latest
+  asdf install nodejs 16.15.0
+  asdf global nodejs 16.15.0
 
-  # official setup e.g.
-  anyenv install -l
-  anyenv install nodenv
-  exec $SHELL -l
-  nodenv install 8.10.0
-  nodenv global 8.10.0
-  nodenv rehash
+  # golang
+  asdf plugin-add golang
+  asdf install golang 1.18.1
+  asdf global golang 1.18.1
+  
+  # python
+  asdf plugin-add python
+  asdf install python latest
+  asdf global python 3.10.4
 ```

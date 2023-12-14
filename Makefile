@@ -14,7 +14,6 @@ help:
 	@echo "make init           #=> Setup environment settings"
 	@echo "make install        #=> Run make update, deploy, init"
 	@echo "make clean          #=> Remove the dotfiles"
-	@echo "make anyenv         #=> Setup anyenv. Init and install plugins"
 
 list:
 	@echo "make list"
@@ -57,11 +56,4 @@ clean:
 	)
 	# -rm -rf $(PWD)
 
-anyenv:
-	@echo "Setup anyenv"
-	@$(anyenv init)
-	@$(anyenv install --init)
-	@$(echo $SHELL -l)
-	@cd $(PWD)/.anyenv/plugins && git clone https://github.com/znz/anyenv-update.git
-	@cd $(PWD)/.anyenv/plugins && git clone https://github.com/znz/anyenv-git.git
 
