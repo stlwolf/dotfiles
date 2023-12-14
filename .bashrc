@@ -217,9 +217,6 @@ if [ -e "${HOME}/.bashrc.local" ]; then
   source "${HOME}/.bashrc.local"
 fi
 
-eval "$(anyenv init -)"
-export PATH="$HOME/.anyenv/bin:$PATH"
-
 alias awsp="source /Users/eddy/work/repos/github.com/stlwolf/awsp/run.sh"
 
 eval "$(starship init bash)"
