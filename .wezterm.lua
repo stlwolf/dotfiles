@@ -54,6 +54,7 @@ end)
 config.keys = {
   { key = 'f', mods = 'CTRL|CMD', action = wezterm.action.ToggleFullScreen },
   { key = 'A', mods = 'CTRL', action = wezterm.action.EmitEvent 'random-color-scheme' },
+  { key = 'R', mods = 'CMD|SHIFT', action = act.ClearScrollback 'ScrollbackAndViewport' },
 --   { key = 'UpArrow', mods = 'SHIFT', action = act.ScrollToPrompt(-1) },
 --   { key = 'DownArrow', mods = 'SHIFT', action = act.ScrollToPrompt(1) },
 }
