@@ -66,3 +66,10 @@
   asdf install python latest
   asdf global python 3.10.4
 ```
+
+- [fzf](https://github.com/junegunn/fzf)
+```shell
+  # If it doesn't work, it needs to be initialized
+  # https://github.com/junegunn/fzf?tab=readme-ov-file#using-homebrew
+  $(brew --prefix)/opt/fzf/install
+```

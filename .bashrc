@@ -108,7 +108,20 @@ gcop() {
 }
 alias gcp=gcop
 
+# fzf
+[ -f ~/.fzf.bash ] && source ~/.fzf.bash
+
+# fzfでdockerコンテナに入る
+# ref: https://momozo.tech/2021/03/10/fzf%E3%81%A7zsh%E3%82%BF%E3%83%BC%E3%83%9F%E3%83%8A%E3%83%AB%E4%BD%9C%E6%A5%AD%E3%82%92%E5%8A%B9%E7%8E%87%E5%8C%96/
+fdcnte() {
+  local cid
+  cid=$(docker ps | sed 1d | fzf -q "$1" | awk '{print $1}')
+  [ -n "$cid" ] && docker exec -it "$cid" /bin/bash
+}
+alias fzfc=fdcnte
+
 ## os alias
+alias cat='bat'
 alias ls='eza'
 alias eza='eza -la'
 alias ll='eza -la'
@@ -117,6 +130,7 @@ alias ll='eza -la'
 alias vi='vim'
 alias py='python'
 alias og='open_github'
+alias awsp="source /Users/eddy/work/repos/github.com/stlwolf/awsp/run.sh"
 
 # ghq alias
 alias ghh='cd $(ghq root)/$(ghq list | peco)'
@@ -210,16 +224,18 @@ function tmux_ssh() {
 }
 alias ssh=tmux_ssh
 
+# starship
+eval "$(starship init bash)"
+export STARSHIP_CONFIG=~/.config/starship/starship.toml
+
+# tool init
 eval "$(hub alias -s)"
+eval "$(zoxide init bash)"
 
 # ローカルファイルに分ける
 if [ -e "${HOME}/.bashrc.local" ]; then
   source "${HOME}/.bashrc.local"
 fi
 
-alias awsp="source /Users/eddy/work/repos/github.com/stlwolf/awsp/run.sh"
-
-eval "$(starship init bash)"
-export STARSHIP_CONFIG=~/.config/starship/starship.toml
-
 export PATH="$PATH:/opt/homebrew/share/git-core/contrib/diff-highlight"
+
