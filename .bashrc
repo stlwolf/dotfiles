@@ -120,6 +120,16 @@ fdcnte() {
 }
 alias fzfc=fdcnte
 
+# fd - cd to selected directory
+# https://qiita.com/kamykn/items/aa9920f07487559c0c7e
+fcd() {
+  local dir
+  dir=$(find ${1:-.} -path '*/\.*' -prune \
+                  -o -type d -print 2> /dev/null | fzf +m) &&
+  cd "$dir"
+}
+alias fcd=fcd
+
 ## os alias
 alias cat='bat'
 alias ls='eza'
