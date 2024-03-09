@@ -19,6 +19,14 @@ bind generic P      ?git push -u %(remote) %(repo:head)
 bind generic F      ?git fetch %(remote)
 bind main    F      ?git fetch %(remote)
 
+# S で stash save
+bind status S      ?git stash save "%(prompt Enter stash comment: )"
+
+# H で reset --hard
+#bind main    H      ?git reset --hard %(commit)
+#bind diff    H      ?git reset --hard %(commit)
+#bind refs    H      ?git reset --hard %(branch)
+
 # ^ で reset --soft
 bind generic ^      ?git reset --soft HEAD^
 
@@ -80,3 +88,7 @@ bind tree    <Esc>; @hub browse -- blob/"%(prompt Enter branch name: )"/%(file)
 bind blob    <Esc>; @hub browse -- blob/"%(prompt Enter branch name: )"/%(file)
 bind grep    <Esc>; @hub browse -- blob/"%(prompt Enter branch name: )"/%(file)
 
+# w で GitHub の該当ブランチの Pull Request 作成ページを開く ※要 hub インストール
+bind main    w      @hub browse -- compare/%(branch)?expand=1
+bind diff    w      @hub browse -- compare/%(branch)?expand=1
+bind refs    w      @hub browse -- compare/%(branch)?expand=1
