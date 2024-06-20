@@ -44,6 +44,28 @@ function random_color_scheme()
   return schemes[i]
 end
 
+function random_background_image()
+  local image_dir = ''
+  local cmd = 'find "' .. image_dir .. '" -type f \\( -name "*.png" -o -name "*.jpg" -o -name "*.gif" \\)'
+  local images = {}
+
+  local f = io.popen(cmd)
+  if f then
+    for file in f:lines() do
+      table.insert(images, file)
+    end
+    f:close()
+  end
+
+  if #images > 0 then
+    math.randomseed(os.time())
+    local i = math.random(#images)
+    return images[i]
+  end
+
+  return nil
+end
+
 wezterm.on('random-color-scheme', function(window, pane)
   local overrides = window:get_config_overrides() or {}
   scheme = random_color_scheme()
@@ -51,19 +73,29 @@ wezterm.on('random-color-scheme', function(window, pane)
   window:set_config_overrides(overrides)
 end)
 
+wezterm.on('random-background-image', function(window, pane)
+  local overrides = window:get_config_overrides() or {}
+  local image = random_background_image()
+  if image then
+    overrides.window_background_image = image
+    window:set_config_overrides(overrides)
+  end
+end)
+
 config.keys = {
   { key = 'f', mods = 'CTRL|CMD', action = wezterm.action.ToggleFullScreen },
   { key = 'A', mods = 'CTRL', action = wezterm.action.EmitEvent 'random-color-scheme' },
+  { key = 'V', mods = 'CTRL', action = wezterm.action.EmitEvent 'random-background-image' },
   { key = 'R', mods = 'CMD|SHIFT', action = act.ClearScrollback 'ScrollbackAndViewport' },
 --   { key = 'UpArrow', mods = 'SHIFT', action = act.ScrollToPrompt(-1) },
 --   { key = 'DownArrow', mods = 'SHIFT', action = act.ScrollToPrompt(1) },
 }
 
-config.window_background_image = ''
+config.window_background_image = random_background_image()
 
 config.window_background_image_hsb = {
   -- Darken the background image by reducing it to 1/3rd
-  brightness = 0.2,
+  brightness = 0.15,
 
   -- You can adjust the hue by scaling its value.
   -- a multiplier of 1.0 leaves the value unchanged.
