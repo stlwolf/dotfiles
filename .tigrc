@@ -45,7 +45,7 @@ bind diff    .      !sh -c "git diff %(commit) | tig"
 bind refs    .      !sh -c "git diff %(branch) | tig"
 
 #############################
-# 画面分割系
+# 画面系
 #############################
 # デフォルト値
 # set vertical-split = auto
@@ -71,6 +71,8 @@ set diff-highlight = true
 color  diff-header       default magenta
 color  diff-chunk        black   white
 
+# リフレッシュするタイミング
+set refresh-mode = auto
 
 ## 外部コマンド系
 # ; で GitHub の該当コミットを開く ※要 hub インストール
