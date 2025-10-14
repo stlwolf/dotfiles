@@ -41,31 +41,33 @@ remove_last_dollar() {
 }
 PS1="$(remove_last_dollar "$PS1")$(aws_prof) \$ "
 
-# OSC 133 エスケープシーケンス設定
-_prompt_executing=""
-function __prompt_precmd() {
-    local ret="$?"
-    if [ "$_prompt_executing" != "0" ]; then
-      _PROMPT_SAVE_PS1="$PS1"
-      _PROMPT_SAVE_PS2="$PS2"
-      PS1=$'\e]133;P;k=i\a'$PS1$'\e]133;B\a\e]122;> \a'
-      PS2=$'\e]133;P;k=s\a'$PS2$'\e]133;B\a'
-    fi
-    if [ "$_prompt_executing" != "" ]; then
-       printf "\033]133;D;%s;aid=%s\007" "$ret" "$$"
-    fi
-    printf "\033]133;A;cl=m;aid=%s\007" "$$"
-    _prompt_executing=0
-}
-function __prompt_preexec() {
-    PS1="$_PROMPT_SAVE_PS1"
-    PS2="$_PROMPT_SAVE_PS2"
-    printf "\033]133;C;\007"
-    _prompt_executing=1
-}
+# OSC 133 エスケープシーケンス設定 - disabled in TMUX to prevent character corruption
+if [[ -z "$TMUX" ]]; then
+    _prompt_executing=""
+    function __prompt_precmd() {
+        local ret="$?"
+        if [ "$_prompt_executing" != "0" ]; then
+          _PROMPT_SAVE_PS1="$PS1"
+          _PROMPT_SAVE_PS2="$PS2"
+          PS1=$'\e]133;P;k=i\a'$PS1$'\e]133;B\a\e]122;> \a'
+          PS2=$'\e]133;P;k=s\a'$PS2$'\e]133;B\a'
+        fi
+        if [ "$_prompt_executing" != "" ]; then
+           printf "\033]133;D;%s;aid=%s\007" "$ret" "$$"
+        fi
+        printf "\033]133;A;cl=m;aid=%s\007" "$$"
+        _prompt_executing=0
+    }
+    function __prompt_preexec() {
+        PS1="$_PROMPT_SAVE_PS1"
+        PS2="$_PROMPT_SAVE_PS2"
+        printf "\033]133;C;\007"
+        _prompt_executing=1
+    }
 
-trap '__prompt_precmd' DEBUG
-PROMPT_COMMAND="__prompt_preexec"
+    trap '__prompt_precmd' DEBUG
+    PROMPT_COMMAND="__prompt_preexec"
+fi
 
 #### peco commands
 ## find 使って peco る
@@ -107,6 +109,9 @@ gcop() {
       xargs git checkout
 }
 alias gcp=gcop
+
+# merge済みのブランチ削除
+alias gitbd="git branch --merged | grep -vE '^\*|main$|master$|develop$' | xargs -I % git branch -d %"
 
 # fzf
 [ -f ~/.fzf.bash ] && source ~/.fzf.bash
