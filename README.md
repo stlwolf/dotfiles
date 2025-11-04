@@ -73,3 +73,26 @@
   # https://github.com/junegunn/fzf?tab=readme-ov-file#using-homebrew
   $(brew --prefix)/opt/fzf/install
 ```
+
+#### AI Tool Integration
+
+- **Windsurf / VSCode / Cursor / その他AIツール**
+  - `.bashrc`にはtmuxの自動起動設定が含まれていますが、AIツールからのコマンド実行時には自動的にスキップされます
+  - 以下の環境変数でAI IDEを自動検出します：
+    - `VSCODE_PID` + `CODEIUM_EDITOR_APP_ROOT` (Windsurf)
+    - `TERM_PROGRAM=vscode` (VSCode/Cursor系)
+    - `CURSOR_PID` (Cursor)
+    - `CLAUDE_CODE` (Claude Code)
+  - AI IDE検出時にスキップされる設定：
+    - tmux自動起動
+    - starship初期化
+    - bash-completion読み込み
+    - hub/zoxide初期化
+    - OSC 133エスケープシーケンス
+  - **通常のターミナル（iTerm2、WezTerm等）では全ての設定が有効**
+  
+- **環境変数を確認する場合**:
+  ```bash
+  # AIツールの統合ターミナルで実行
+  env | grep -iE '(vscode|cursor|windsurf|claude|term_program)'
+  ```

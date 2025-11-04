@@ -5,6 +5,37 @@ export HISTCONTROL=ignoreboth
 
 shopt -u histappend   # .bash_history追記モードは不要なのでOFFに
 
+# AI IDE検出関数
+# Windsurf, VSCode, Cursor, Claude Codeなどの統合ターミナルかどうかを判定
+is_ai_ide() {
+    # Windsurfの検出（VSCODE_PIDとCodeiumの組み合わせ）
+    [[ -n "$VSCODE_PID" && -n "$CODEIUM_EDITOR_APP_ROOT" ]] && return 0
+    
+    # VSCode/Cursor系の統合ターミナル検出
+    [[ "$TERM_PROGRAM" == "vscode" ]] && return 0
+    
+    # その他のAI IDE固有の環境変数（必要に応じて追加）
+    [[ -n "$CURSOR_PID" ]] && return 0
+    [[ -n "$CLAUDE_CODE" ]] && return 0
+    
+    return 1
+}
+
+# Homebrew環境変数設定
+# AI IDE環境では /bin/ps の実行が制限されているため、直接設定
+if is_ai_ide; then
+    # brew shellenvの出力を直接設定（/bin/psを使わない）
+    export HOMEBREW_PREFIX="/opt/homebrew"
+    export HOMEBREW_CELLAR="/opt/homebrew/Cellar"
+    export HOMEBREW_REPOSITORY="/opt/homebrew"
+    export PATH="/opt/homebrew/bin:/opt/homebrew/sbin${PATH+:$PATH}"
+    export MANPATH="/opt/homebrew/share/man${MANPATH+:$MANPATH}:"
+    export INFOPATH="/opt/homebrew/share/info:${INFOPATH:-}"
+else
+    # 通常のターミナルでは brew shellenv を実行
+    eval "$(/opt/homebrew/bin/brew shellenv)"
+fi
+
 function share_history {  # 以下の内容を関数として定義
    history -a  # .bash_historyに前回コマンドを1行追記
    history -c  # 端末ローカルの履歴を一旦消去
@@ -13,16 +44,20 @@ function share_history {  # 以下の内容を関数として定義
 export PROMPT_COMMAND='share_history'  # 上記関数をプロンプト毎に自動実施
 
 # Homebrew bash-completion
-if [ -f `brew --prefix`/etc/bash_completion ]; then
-        . `brew --prefix`/etc/bash_completion
-fi
+# AIツールからの実行時はスキップ（遅延を防ぐ）
+if ! is_ai_ide; then
+    if [ -f `brew --prefix`/etc/bash_completion ]; then
+            . `brew --prefix`/etc/bash_completion
+    fi
 
-if [ -f `brew --prefix`/etc/hub.bash_completion ]; then
-        . `brew --prefix`/etc/hub.bash_completion
+    if [ -f `brew --prefix`/etc/hub.bash_completion ]; then
+            . `brew --prefix`/etc/hub.bash_completion
+    fi
 fi
 
 NAME='HOME'
-if [ -f `brew --prefix`/etc/bash_completion.d/git-completion.bash ]; then
+# __git_ps1が実際に利用可能かどうかで判断（ファイルの存在ではなく関数の存在で判断）
+if type -t __git_ps1 &>/dev/null; then
     PS1='\[\e[0;37m\]${NAME}\[\e[0;37m\][\t]\[\e[0;37m\]: \[\e[1;37m\]\w\n\[\e[0;36m\]$(__git_ps1) \[\e[0;34m\]\$\[\e[m\]'
 else
     PS1='\[\e[0;37m\]${NAME}\[\e[0;37m\][\t]\[\e[0;37m\]: \[\e[1;37m\]\w\n\[\e[0;34m\]\$\[\e[m\]'
@@ -42,7 +77,8 @@ remove_last_dollar() {
 PS1="$(remove_last_dollar "$PS1")$(aws_prof) \$ "
 
 # OSC 133 エスケープシーケンス設定 - disabled in TMUX to prevent character corruption
-if [[ -z "$TMUX" ]]; then
+# AIツールからの実行時は無効化
+if [[ -z "$TMUX" && $- == *i* ]] && ! is_ai_ide; then
     _prompt_executing=""
     function __prompt_precmd() {
         local ret="$?"
@@ -83,19 +119,21 @@ alias gvi='pvim'
 ## http://qiita.com/fortkle/items/52c1077a7963cb01c596
 ## の改良版
 ## http://qiita.com/comutt/items/f54e755f22508a6c7d78
-peco-select-history() {
-    declare l=$(HISTTIMEFORMAT= history | sort -k1,1nr | perl -ne 'BEGIN { my @lines = (); } s/^\s*\d+\s*//; $in=$_; if (!(grep {$in eq $_} @lines)) { push(@lines, $in); print $in; }' | peco --query "$READLINE_LINE")
-    READLINE_LINE="$l"
-    READLINE_POINT=${#l}
-}
-bind -x '"\C-r": peco-select-history'
+if [[ $- == *i* ]]; then
+    peco-select-history() {
+        declare l=$(HISTTIMEFORMAT= history | sort -k1,1nr | perl -ne 'BEGIN { my @lines = (); } s/^\s*\d+\s*//; $in=$_; if (!(grep {$in eq $_} @lines)) { push(@lines, $in); print $in; }' | peco --query "$READLINE_LINE")
+        READLINE_LINE="$l"
+        READLINE_POINT=${#l}
+    }
+    bind -x '"\C-r": peco-select-history'
 
-peco-branch-name() {
-    declare l=$(git branch --sort=-authordate | grep -v -e '->' | perl -pe 's/\*//g' | perl -pe 's/^\h+//g' | perl -pe 's#^remotes/origin/###' | perl -nle 'print if !$c{$_}++' | peco)
-    READLINE_LINE="$READLINE_LINE$l"
-    READLINE_POINT=${#l}
-}
-bind -x '"\C-f": peco-branch-name'
+    peco-branch-name() {
+        declare l=$(git branch --sort=-authordate | grep -v -e '->' | perl -pe 's/\*//g' | perl -pe 's/^\h+//g' | perl -pe 's#^remotes/origin/###' | perl -nle 'print if !$c{$_}++' | peco)
+        READLINE_LINE="$READLINE_LINE$l"
+        READLINE_POINT=${#l}
+    }
+    bind -x '"\C-f": peco-branch-name'
+fi
 
 # リモートブランチの git checkout を peco で簡単にする
 # https://qiita.com/ymm1x/items/a735e82244a877ac4d23
@@ -221,7 +259,10 @@ function tmux_automatically_attach_session()
         fi
     fi
 }
-tmux_automatically_attach_session
+# AIツール（Windsurf等）からのコマンド実行時はtmux自動起動をスキップ
+if [[ $- == *i* ]] && ! is_ai_ide; then
+    tmux_automatically_attach_session
+fi
 
 # tmuxのウィンドウ名をsshで繋いでるときは接続先ホストにする
 # http://qiita.com/shrkw/items/167be53796d4507c736b
@@ -240,12 +281,18 @@ function tmux_ssh() {
 alias ssh=tmux_ssh
 
 # starship
-eval "$(starship init bash)"
-export STARSHIP_CONFIG=~/.config/starship/starship.toml
+# AIツールからの実行時はスキップ（遅延を防ぐ）
+if ! is_ai_ide; then
+    eval "$(starship init bash)"
+    export STARSHIP_CONFIG=~/.config/starship/starship.toml
+fi
 
 # tool init
-eval "$(hub alias -s)"
-eval "$(zoxide init bash)"
+# AIツールからの実行時はスキップ（遅延を防ぐ）
+if ! is_ai_ide; then
+    eval "$(hub alias -s)"
+    eval "$(zoxide init bash)"
+fi
 
 # ローカルファイルに分ける
 if [ -e "${HOME}/.bashrc.local" ]; then
