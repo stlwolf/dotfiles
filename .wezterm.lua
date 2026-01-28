@@ -91,6 +91,24 @@ config.keys = {
 --   { key = 'DownArrow', mods = 'SHIFT', action = act.ScrollToPrompt(1) },
 }
 
+local BG_INTERVAL = 60
+local last_bg_switch = {}
+
+wezterm.on('update-right-status', function(window, pane)
+  local now = os.time()
+  local id = window:window_id()
+  local last = last_bg_switch[id] or 0
+  if now - last >= BG_INTERVAL then
+    last_bg_switch[id] = now
+    local overrides = window:get_config_overrides() or {}
+    local image = random_background_image()
+    if image then
+      overrides.window_background_image = image
+      window:set_config_overrides(overrides)
+    end
+  end
+end)
+
 config.window_background_image = random_background_image()
 
 config.window_background_image_hsb = {
