@@ -1,0 +1,97 @@
+---
+description: Makefileのコーディング規約
+globs: ["Makefile", "*.mk"]
+---
+
+# Makefile規約
+
+## 基本ルール
+
+### ターゲット命名
+
+- 小文字を使用
+- 複数単語はハイフン区切り
+- 動詞から始める（deploy, install, clean等）
+
+```makefile
+# Good
+deploy:
+clean-all:
+run-tests:
+
+# Bad
+Deploy:
+clean_all:
+runTests:
+```
+
+### .PHONY宣言
+
+実ファイルを生成しないターゲットは`.PHONY`に追加:
+
+```makefile
+.PHONY: help list init deploy update install clean lint validate
+```
+
+### helpターゲット
+
+新しいターゲット追加時は`help`にも追加:
+
+```makefile
+help:
+	@echo "make deploy         #=> Create symlink to home directory"
+	@echo "make lint           #=> Run shellcheck on scripts"
+```
+
+## 変数定義
+
+### 命名規則
+
+- 大文字とアンダースコア
+- 意味のある名前
+
+```makefile
+DOTFILES_TARGET   := $(wildcard .??*) bin
+DOTFILES_EXCLUDES := .idea .DS_Store .git
+```
+
+### 代入演算子
+
+- `:=`: 即時評価（推奨）
+- `=`: 遅延評価
+- `?=`: 未定義時のみ代入
+
+## コマンド
+
+### サイレント実行
+
+ユーザーに見せる必要のない内部コマンドは`@`でサイレント化:
+
+```makefile
+deploy:
+	@echo "==> Start to deploy dotfiles"
+	@$(foreach val, $(FILES), ln -sfnv $(val) $(HOME)/$(val);)
+```
+
+### エラーハンドリング
+
+失敗しても続行する場合は`-`を使用（cleanターゲット等）:
+
+```makefile
+clean:
+	@-$(foreach val, $(FILES), rm -vrf $(HOME)/$(val);)
+```
+
+## このリポジトリの既存ターゲット
+
+| ターゲット | 説明 |
+|------------|------|
+| `help` | コマンド一覧表示 |
+| `list` | デプロイ対象ファイル一覧 |
+| `deploy` | シンボリックリンク作成 |
+| `init` | 環境初期化 |
+| `install` | update + deploy + init |
+| `update` | git pull |
+| `clean` | dotfiles削除 |
+| `lint` | shellcheck実行 |
+| `validate` | シンボリックリンク検証 |

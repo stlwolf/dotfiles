@@ -1,0 +1,48 @@
+---
+description: dotfilesリポジトリ全体のルール
+globs: ["**/*"]
+alwaysApply: true
+---
+
+# dotfilesリポジトリルール
+
+## リポジトリ概要
+
+macOS専用の個人dotfiles管理リポジトリ。Homebrew前提。
+
+## 構造規約
+
+### シンボリックリンク管理
+
+- ルートディレクトリの`.`で始まるファイル/ディレクトリはホームディレクトリにリンクされる
+- `bin/`配下のスクリプトは`~/bin/`にリンクされPATHに追加される
+- `.config/`配下は`~/.config/`にリンクされる
+
+### 除外ファイル
+
+以下はデプロイ対象外（Makefileの`DOTFILES_EXCLUDES`で定義）:
+- `.idea`, `.DS_Store`, `.git`, `.gitmodules`, `.gitignore`, `.config`
+
+## AI IDE検出パターン
+
+`.bashrc`の`is_ai_ide()`関数は以下を検出:
+- Windsurf: `VSCODE_PID` + `CODEIUM_EDITOR_APP_ROOT`
+- VSCode/Cursor: `TERM_PROGRAM=vscode`
+- Cursor: `CURSOR_PID`
+- Claude Code: `CLAUDE_CODE`
+
+**この検出パターンを変更する場合は既存のパターンを維持すること。**
+
+## ドキュメント更新
+
+以下の場合はREADME.mdを更新:
+- 新しい外部依存を追加した場合
+- 新しいセットアップ手順が必要な場合
+- 重要な設定変更を行った場合
+
+## Makefileコマンド
+
+新しいターゲットを追加する場合:
+1. `.PHONY`に追加
+2. `help`ターゲットに説明を追加
+3. 小文字・ハイフン区切りの命名規則に従う

@@ -1,0 +1,100 @@
+---
+description: Lua設定ファイルのコーディング規約（WezTerm, Hammerspoon）
+globs: [".wezterm.lua", ".hammerspoon/**/*.lua"]
+---
+
+# Lua設定ファイル規約
+
+WezTermおよびHammerspoon設定用のLuaコーディング規約。
+
+## 基本ルール
+
+### local変数の使用
+
+グローバル変数を避け、常に`local`を使用:
+
+```lua
+-- Good
+local wezterm = require("wezterm")
+local config = {}
+
+-- Bad
+wezterm = require("wezterm")
+config = {}
+```
+
+### モジュールのrequire
+
+明示的にrequireし、ローカル変数に代入:
+
+```lua
+local wezterm = require("wezterm")
+local act = wezterm.action
+```
+
+## WezTerm設定
+
+### 設定構造
+
+```lua
+local wezterm = require("wezterm")
+local config = {}
+
+-- 設定をconfigテーブルに追加
+config.font = wezterm.font("JetBrains Mono")
+config.font_size = 14.0
+
+return config
+```
+
+### キーバインディング
+
+```lua
+config.keys = {
+  {
+    key = "c",
+    mods = "CMD",
+    action = act.CopyTo("Clipboard"),
+  },
+}
+```
+
+## Hammerspoon設定
+
+### モジュール分割
+
+機能ごとにファイルを分割し、`init.lua`でrequire:
+
+```lua
+-- init.lua
+require("altDoublePress")
+require("ctrlDoublePress")
+```
+
+### 各モジュールの構造
+
+```lua
+-- example.lua
+local module = {}
+
+local function privateFunction()
+  -- ...
+end
+
+function module.publicFunction()
+  -- ...
+end
+
+return module
+```
+
+## コメント
+
+- 設定の目的を説明するコメントを追加
+- 複雑なロジックには詳細なコメントを付ける
+
+```lua
+-- ダブルタップでアプリケーション切り替え
+-- 300ms以内の2回押しを検出
+local DOUBLE_TAP_DELAY = 0.3
+```
