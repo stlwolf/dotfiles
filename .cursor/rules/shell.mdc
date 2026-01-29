@@ -1,0 +1,114 @@
+---
+description: シェルスクリプトのコーディング規約（Google Shell Style Guide + shellcheck準拠）
+globs: [".bashrc", ".bash_profile", "bin/*", "etc/**/*.sh", "scripts/**/*.sh"]
+---
+
+# シェルスクリプト規約
+
+Google Shell Style Guide + shellcheck strict準拠。macOS + Homebrew bash前提。
+
+## 基本ルール
+
+### shebang
+
+```bash
+#!/usr/bin/env bash
+```
+
+### エラーハンドリング（スクリプトファイル）
+
+スクリプトファイルの先頭に必ず追加:
+
+```bash
+set -euo pipefail
+```
+
+- `-e`: コマンド失敗時に即座に終了
+- `-u`: 未定義変数の参照でエラー
+- `-o pipefail`: パイプライン内のエラーを検出
+
+**注意**: `.bashrc`や`.bash_profile`のような対話シェル設定では`set -e`は使用しない。
+
+### 変数展開
+
+常にダブルクォートで囲む:
+
+```bash
+# Good
+echo "$variable"
+command "$1" "$2"
+
+# Bad
+echo $variable
+command $1 $2
+```
+
+### 条件分岐
+
+`[[ ]]`を使用（bash拡張、より安全）:
+
+```bash
+# Good
+if [[ -n "$var" ]]; then
+if [[ "$var" == "value" ]]; then
+
+# Bad
+if [ -n "$var" ]; then
+if [ "$var" = "value" ]; then
+```
+
+### 関数定義
+
+```bash
+# Good
+function_name() {
+  local var="value"
+  # ...
+}
+
+# Bad（functionキーワードは非推奨）
+function function_name {
+  # ...
+}
+```
+
+### ローカル変数
+
+関数内では`local`を使用:
+
+```bash
+my_function() {
+  local result
+  result=$(some_command)
+  echo "$result"
+}
+```
+
+## エラー出力
+
+エラーメッセージは標準エラー出力へ:
+
+```bash
+echo "Error: something went wrong" >&2
+exit 1
+```
+
+## Usage表示
+
+スクリプトには引数チェックとUsage表示を含める:
+
+```bash
+#!/usr/bin/env bash
+set -euo pipefail
+
+if [[ $# -lt 1 ]]; then
+  echo "Usage: $(basename "$0") <argument>" >&2
+  exit 2
+fi
+```
+
+## shellcheck
+
+- `make lint`で検証可能
+- `.shellcheckrc`で設定をカスタマイズ
+- SC1090, SC1091（外部ソース）は除外済み
