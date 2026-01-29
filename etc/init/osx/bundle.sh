@@ -25,6 +25,11 @@ if has "brew"; then
     fi
 
     brew bundle
+
+    # cursor-cli quarantine属性削除
+    if [ -d "/opt/homebrew/Caskroom/cursor-cli" ]; then
+        xattr -dr com.apple.quarantine /opt/homebrew/Caskroom/cursor-cli/
+    fi
 else
     die "you should install brew"
 fi
