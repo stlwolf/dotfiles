@@ -16,12 +16,14 @@ macOS専用の個人dotfiles管理リポジトリ。Homebrew前提。
 
 - ルートディレクトリの`.`で始まるファイル/ディレクトリはホームディレクトリにリンクされる
 - `bin/`配下のスクリプトは`~/bin/`にリンクされPATHに追加される
-- `.config/`配下は`~/.config/`にリンクされる
+- `.config/`は特別処理: ディレクトリ自体はリンクせず、内部のファイルを個別に`~/.config/`へリンク
 
 ### 除外ファイル
 
 以下はデプロイ対象外（Makefileの`DOTFILES_EXCLUDES`で定義）:
-- `.idea`, `.DS_Store`, `.git`, `.gitmodules`, `.gitignore`, `.config`
+- `.idea`, `.DS_Store`, `.git`, `.gitmodules`, `.gitignore`
+
+**注**: `.config`は除外リストに含まれるが、内部ファイルは`CONFIG_FILES`として別途処理される。
 
 ## AI IDE検出パターン
 
