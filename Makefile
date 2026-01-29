@@ -61,10 +61,10 @@ clean:
 lint:
 	@echo "==> Running shellcheck..."
 	@status=0; \
-	shellcheck -x bin/* 2>/dev/null || status=$$?; \
-	shellcheck -x etc/init/*.sh etc/init/osx/*.sh etc/lib/*.sh 2>/dev/null || status=$$?; \
-	shellcheck -x scripts/*.sh 2>/dev/null || status=$$?; \
-	shellcheck -x .bashrc .bash_profile 2>/dev/null || status=$$?; \
+	shellcheck -x bin/* || status=$$?; \
+	shellcheck -x etc/init/*.sh etc/init/osx/*.sh etc/lib/*.sh || status=$$?; \
+	shellcheck -x scripts/*.sh || status=$$?; \
+	shellcheck -x .bashrc .bash_profile || status=$$?; \
 	if [ $$status -ne 0 ]; then \
 		echo "==> shellcheck found issues (exit code: $$status)"; \
 	else \
@@ -74,7 +74,7 @@ lint:
 validate:
 	@echo "==> Checking symlink integrity..."
 	@$(foreach val, $(DOTFILES_FILES), \
-		if [[ -L "$(HOME)/$(val)" ]]; then \
+		if [ -L "$(HOME)/$(val)" ]; then \
 			if readlink "$(HOME)/$(val)" | grep -q "$(PWD)"; then \
 				echo "OK: $(val)"; \
 			else \
