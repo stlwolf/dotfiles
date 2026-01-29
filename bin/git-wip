@@ -1,9 +1,12 @@
-#! /bin/sh
-if [ $# -ne 2 ]; then
-  echo "Usage: git wip (branch-name) (commit-message)"
+#!/usr/bin/env bash
+set -euo pipefail
+
+if [[ $# -ne 2 ]]; then
+  echo "Usage: git wip <branch-name> <commit-message>" >&2
   exit 2
 fi
+
 git pull origin develop
-git checkout -b $1
+git checkout -b "$1"
 git commit --allow-empty -m "[wip] $2"
-#git push origin $1
+#git push origin "$1"

@@ -5,7 +5,7 @@ DOTFILES_TARGET   := $(wildcard .??*) bin
 DOTFILES_FILES    := $(filter-out $(DOTFILES_EXCLUDES), $(DOTFILES_TARGET))
 CONFIG_FILES      := $(shell find .config -type f)
 
-.PHONY: help list init deploy update install clean anyenv
+.PHONY: help list init deploy update install clean lint validate
 
 help:
 	@echo "make list           #=> Show file list for deployment"
@@ -14,6 +14,8 @@ help:
 	@echo "make init           #=> Setup environment settings"
 	@echo "make install        #=> Run make update, deploy, init"
 	@echo "make clean          #=> Remove the dotfiles"
+	@echo "make lint           #=> Run shellcheck on scripts"
+	@echo "make validate       #=> Check symlink integrity"
 
 list:
 	@echo "make list"
@@ -56,4 +58,26 @@ clean:
 	)
 	# -rm -rf $(PWD)
 
+lint:
+	@echo "==> Running shellcheck..."
+	@shellcheck -x bin/* 2>/dev/null || true
+	@shellcheck -x etc/init/*.sh etc/init/osx/*.sh etc/lib/*.sh 2>/dev/null || true
+	@shellcheck -x scripts/*.sh 2>/dev/null || true
+	@shellcheck -x .bashrc .bash_profile 2>/dev/null || true
+	@echo "==> Done."
+
+validate:
+	@echo "==> Checking symlink integrity..."
+	@$(foreach val, $(DOTFILES_FILES), \
+		if [ -L "$(HOME)/$(val)" ]; then \
+			if readlink "$(HOME)/$(val)" | grep -q "$(PWD)"; then \
+				echo "OK: $(val)"; \
+			else \
+				echo "Warning: $(val) points elsewhere"; \
+			fi; \
+		else \
+			echo "Missing: $(val)"; \
+		fi; \
+	)
+	@echo "==> Done."
 
