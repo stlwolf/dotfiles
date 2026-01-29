@@ -269,13 +269,14 @@ fi
 function tmux_ssh() {
   if [[ -n $(printenv TMUX) ]]
   then
-    local window_name=$(tmux display -p '#{window_name}')
+    local window_name
+    window_name=$(tmux display -p '#{window_name}')
     # tmux rename-window -- "$@[-1]" # zsh specified
     tmux rename-window -- "${!#}" # for bash
-    command ssh $@
-    tmux rename-window $window_name
+    command ssh "$@"
+    tmux rename-window "$window_name"
   else
-    command ssh $@
+    command ssh "$@"
   fi
 }
 alias ssh=tmux_ssh

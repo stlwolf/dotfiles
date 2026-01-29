@@ -1,19 +1,29 @@
-#!/bin/bash
+#!/usr/bin/env bash
+set -euo pipefail
 
-# Get the current working directory
-current_dir=$(pwd)
+GITHUB_BASE="https://github.com/"
+REPOS_NAME=$(grep url .git/config | head -n 1 | sed 's|.*github.com[:/]\([^/]*/[^.]*\).*|\1|')
+BRANCH_NAME="$(git branch | grep '\*' | awk '{ print $2 }')"
+MODE="${1:-}"
 
-# Define the base path where your repositories are stored
-base_path="$HOME/work/repos/github.com"
+# '#' を '%23' にURLエンコード
+ENCODED_BRANCH_NAME=$(echo "$BRANCH_NAME" | awk '{gsub(/#/, "%23"); print}')
 
-# Check if the current working directory is under the base_path
-if [[ $current_dir == $base_path* ]]; then
-    # Remove the base_path from the current working directory
-    repo_path=${current_dir#"$base_path/"}
-
-    # Open the GitHub URL in the default browser
-    open "https://github.com/$repo_path"
-else
-    echo "Not in a GitHub repository directory."
+if [[ "${MODE}" == "help" ]] || [[ "${MODE}" == "h" ]] || [[ "${MODE}" == "-h" ]]; then
+    echo "Usage: $0 [pr]"
+    exit
 fi
 
+if [[ "${BRANCH_NAME}" == "master" ]] || [[ "${BRANCH_NAME}" == "main" ]]; then
+    URL="${GITHUB_BASE}${REPOS_NAME}"
+else
+    if [[ "${MODE}" == "pr" ]]; then
+        URL="${GITHUB_BASE}${REPOS_NAME}/compare/${ENCODED_BRANCH_NAME}?expand=1"
+    else
+        MODE="branch"
+        URL="${GITHUB_BASE}${REPOS_NAME}/tree/${ENCODED_BRANCH_NAME}"
+    fi
+fi
+
+echo "Open ${MODE} mode ${URL}."
+open "${URL}"

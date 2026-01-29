@@ -1,4 +1,4 @@
-#!/bin/bash
+#!/usr/bin/env bash
 #
 # @(#) battery ver.0.2 2014.12.17
 #
@@ -11,7 +11,7 @@
 #
 ######################################################################
 
-ostype() { echo $OSTYPE | tr '[A-Z]' '[a-z]'; }
+ostype() { echo "$OSTYPE" | tr '[:upper:]' '[:lower:]'; }
 determine_os()
 {
     case "$(ostype)" in
@@ -25,7 +25,7 @@ determine_os()
 shell_is_linux() { [[ $SHELL_PLATFORM == 'linux' || $SHELL_PLATFORM == 'bsd' ]]; }
 shell_is_osx()   { [[ $SHELL_PLATFORM == 'osx' ]]; }
 shell_is_bsd()   { [[ $SHELL_PLATFORM == 'bsd' || $SHELL_PLATFORM == 'osx' ]]; }
-has()       { type $1 >/dev/null 2>&1; return $?; }
+has()       { type "$1" >/dev/null 2>&1; return $?; }
 
 declare battery_danger=20
 declare get_battery_help=$(
@@ -41,7 +41,7 @@ usage: ${0##*/} [-h][-pt][-c {type}]
 END
 )
 
-function get_battery()
+get_battery()
 {
     get_battery_initialize
     [ -z "$percentage" ] && return 1
@@ -84,7 +84,7 @@ function get_battery()
     fi
 }
 
-function get_battery_initialize()
+get_battery_initialize()
 {
     determine_os
 
@@ -152,7 +152,7 @@ function get_battery_initialize()
     fi
 }
 
-function get_battery_color()
+get_battery_color()
 {
     if shell_is_osx; then
         if has 'pmset'; then
@@ -191,7 +191,7 @@ function get_battery_color()
     fi
 }
 
-function get_battery_color_tmux()
+get_battery_color_tmux()
 {
     for i in "$@"; do [[ $i =~ t ]] && t_opt=1; done
     if shell_is_osx; then
