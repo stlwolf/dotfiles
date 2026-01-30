@@ -1,0 +1,119 @@
+#!/usr/bin/env bash
+set -euo pipefail
+
+# masterにマージ済み（スカッシュマージ含む）のローカルブランチを安全に削除するスクリプト
+# Usage: git cleanup-merged [base-branch]
+#   base-branch: マージ先ブランチ（デフォルト: master）
+
+readonly BASE_BRANCH="${1:-master}"
+
+# 保護するブランチのパターン
+readonly PROTECTED_BRANCHES="^(master|main|develop|development)$"
+
+# 現在のブランチを取得
+current_branch=$(git branch --show-current)
+
+# base branchが存在するか確認
+if ! git show-ref --verify --quiet "refs/heads/${BASE_BRANCH}"; then
+  echo "エラー: ブランチ '${BASE_BRANCH}' が存在しません" >&2
+  exit 1
+fi
+
+# ブランチがマージ済みかどうかを判定（スカッシュマージ対応）
+# 方法: ブランチのHEADとbase branchのマージベースを比較
+#       ブランチがbase branchに完全に含まれている = マージ済み
+is_branch_merged() {
+  local branch="$1"
+  local base="$2"
+  
+  # 方法1: 通常のマージ（git branch --merged で検出）
+  if git branch --merged "$base" | grep -qE "^\s*${branch}$"; then
+    return 0
+  fi
+  
+  # 方法2: スカッシュマージ検出
+  # ブランチの全コミットがbase branchに含まれているか確認（git cherry）
+  # cherry の出力が空 or すべて "-" で始まる = すべてのコミットが含まれている
+  local unmerged_commits
+  unmerged_commits=$(git cherry "$base" "$branch" 2>/dev/null | grep -c "^+" || true)
+  
+  if [[ "$unmerged_commits" -eq 0 ]]; then
+    return 0
+  fi
+  
+  # 方法3: ブランチのdiffがbase branchに含まれているか（より厳密なスカッシュマージ検出）
+  # merge-baseからブランチまでの変更が、baseに適用済みかどうか
+  local merge_base
+  merge_base=$(git merge-base "$base" "$branch" 2>/dev/null || echo "")
+  
+  if [[ -n "$merge_base" ]]; then
+    # ブランチの変更内容のハッシュを計算
+    local branch_tree_diff
+    branch_tree_diff=$(git diff-tree -p "$merge_base" "$branch" 2>/dev/null | git patch-id --stable 2>/dev/null | cut -d' ' -f1 || echo "branch_hash")
+    
+    # baseブランチの各コミットと比較
+    while read -r commit; do
+      local commit_diff
+      commit_diff=$(git diff-tree -p "${commit}^" "$commit" 2>/dev/null | git patch-id --stable 2>/dev/null | cut -d' ' -f1 || echo "commit_hash")
+      if [[ "$branch_tree_diff" == "$commit_diff" && -n "$branch_tree_diff" ]]; then
+        return 0
+      fi
+    done < <(git log --format="%H" "$merge_base".."$base" 2>/dev/null)
+  fi
+  
+  return 1
+}
+
+# マージ済みブランチを収集
+merged_branches=()
+while read -r branch; do
+  # 空行をスキップ
+  [[ -z "$branch" ]] && continue
+  
+  # 現在のブランチと保護ブランチをスキップ
+  [[ "$branch" == "$current_branch" ]] && continue
+  [[ "$branch" =~ $PROTECTED_BRANCHES ]] && continue
+  
+  # マージ済みかどうか判定
+  if is_branch_merged "$branch" "$BASE_BRANCH"; then
+    merged_branches+=("$branch")
+  fi
+done < <(git branch --format='%(refname:short)')
+
+if [[ ${#merged_branches[@]} -eq 0 ]]; then
+  echo "削除対象のマージ済みブランチはありません。"
+  exit 0
+fi
+
+# 削除対象を表示
+echo "以下のブランチは '${BASE_BRANCH}' にマージ済みです:"
+echo "----------------------------------------"
+for branch in "${merged_branches[@]}"; do
+  # 各ブランチの最終コミット日時を表示
+  last_commit=$(git log -1 --format="%ci" "$branch" 2>/dev/null | cut -d' ' -f1)
+  printf "  %-40s (last commit: %s)\n" "$branch" "$last_commit"
+done
+echo "----------------------------------------"
+
+# ブランチ数をカウント
+echo "合計: ${#merged_branches[@]} ブランチ"
+echo ""
+
+# 確認プロンプト
+read -rp "これらのブランチを削除しますか？ [y/N]: " answer
+
+if [[ "$answer" =~ ^[Yy]$ ]]; then
+  echo ""
+  for branch in "${merged_branches[@]}"; do
+    if git branch -D "$branch" 2>/dev/null; then
+      echo "✓ 削除: $branch"
+    else
+      echo "✗ 削除失敗: $branch" >&2
+    fi
+  done
+  echo ""
+  echo "完了しました。"
+else
+  echo "キャンセルしました。"
+  exit 0
+fi
