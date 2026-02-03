@@ -68,6 +68,21 @@ AI IDE検出時にスキップされる設定:
 
 **この関数を変更する場合は、既存の検出パターンを維持してください。**
 
+### AI開発ツールのインストール
+
+| ツール | インストール方法 | 管理場所 |
+|--------|------------------|----------|
+| Cursor CLI | Homebrew | `etc/init/assets/brew/Brewfile` |
+| Claude Code | curl | `etc/init/osx/claude-code.sh` |
+
+**PATH設定** (`.bashrc`冒頭):
+```bash
+PATH="$HOME/.local/bin:$PATH:$HOME/bin"
+```
+
+- `~/.local/bin`: Claude Code等のユーザーローカルツール（curl installer使用時）
+- `~/bin`: dotfilesのカスタムスクリプト
+
 ## Makefileコマンド
 
 | コマンド | 説明 |

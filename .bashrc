@@ -1,4 +1,7 @@
-PATH="$PATH":~/bin
+# PATH設定
+# ~/bin: カスタムスクリプト
+# ~/.local/bin: Claude Code等のユーザーローカルツール
+PATH="$HOME/.local/bin:$PATH:$HOME/bin"
 export LANG=ja_JP.UTF-8
 export HISTCONTROL=$HISTCONTROL${HISTCONTROL+,}ignoredups
 export HISTCONTROL=ignoreboth
