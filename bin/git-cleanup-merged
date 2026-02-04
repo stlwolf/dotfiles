@@ -2,6 +2,7 @@
 set -euo pipefail
 
 # masterにマージ済み（スカッシュマージ含む）のローカルブランチを安全に削除するスクリプト
+# worktree使用中のブランチはworktreeも一緒に削除する
 # Usage: git cleanup-merged [base-branch]
 #   base-branch: マージ先ブランチ（デフォルト: master）
 
@@ -12,6 +13,17 @@ readonly PROTECTED_BRANCHES="^(master|main|develop|development)$"
 
 # 現在のブランチを取得
 current_branch=$(git branch --show-current)
+
+# worktreeで使用中のブランチを取得
+get_worktree_branches() {
+  git worktree list --porcelain | grep "^branch refs/heads/" | sed 's|branch refs/heads/||'
+}
+
+# worktreeのパスを取得（ブランチ名から）
+get_worktree_path() {
+  local branch="$1"
+  git worktree list --porcelain | grep -B2 "branch refs/heads/${branch}$" | grep "^worktree " | cut -d' ' -f2-
+}
 
 # base branchが存在するか確認
 if ! git show-ref --verify --quiet "refs/heads/${BASE_BRANCH}"; then
@@ -66,21 +78,30 @@ is_branch_merged() {
 
 # マージ済みブランチを収集
 merged_branches=()
+worktree_merged_branches=()
+worktree_branches=$(get_worktree_branches)
+
 while read -r branch; do
   # 空行をスキップ
   [[ -z "$branch" ]] && continue
-  
+
   # 現在のブランチと保護ブランチをスキップ
   [[ "$branch" == "$current_branch" ]] && continue
   [[ "$branch" =~ $PROTECTED_BRANCHES ]] && continue
-  
+
   # マージ済みかどうか判定
   if is_branch_merged "$branch" "$BASE_BRANCH"; then
-    merged_branches+=("$branch")
+    # worktree使用中かどうかで分類
+    if echo "$worktree_branches" | grep -qx "$branch"; then
+      worktree_merged_branches+=("$branch")
+    else
+      merged_branches+=("$branch")
+    fi
   fi
 done < <(git branch --format='%(refname:short)')
 
-if [[ ${#merged_branches[@]} -eq 0 ]]; then
+# 削除対象がない場合
+if [[ ${#merged_branches[@]} -eq 0 && ${#worktree_merged_branches[@]} -eq 0 ]]; then
   echo "削除対象のマージ済みブランチはありません。"
   exit 0
 fi
@@ -88,15 +109,32 @@ fi
 # 削除対象を表示
 echo "以下のブランチは '${BASE_BRANCH}' にマージ済みです:"
 echo "----------------------------------------"
+
+# 通常のブランチ
 for branch in "${merged_branches[@]}"; do
-  # 各ブランチの最終コミット日時を表示
   last_commit=$(git log -1 --format="%ci" "$branch" 2>/dev/null | cut -d' ' -f1)
   printf "  %-40s (last commit: %s)\n" "$branch" "$last_commit"
 done
+
+# worktree使用中のブランチ
+for branch in "${worktree_merged_branches[@]}"; do
+  last_commit=$(git log -1 --format="%ci" "$branch" 2>/dev/null | cut -d' ' -f1)
+  worktree_path=$(get_worktree_path "$branch")
+  printf "  %-40s (last commit: %s)\n" "$branch" "$last_commit"
+  printf "    └─ worktree: %s\n" "$worktree_path"
+done
+
 echo "----------------------------------------"
 
-# ブランチ数をカウント
-echo "合計: ${#merged_branches[@]} ブランチ"
+# カウント表示
+total_count=$((${#merged_branches[@]} + ${#worktree_merged_branches[@]}))
+echo "合計: ${total_count} ブランチ"
+
+if [[ ${#worktree_merged_branches[@]} -gt 0 ]]; then
+  echo ""
+  echo "※ ${#worktree_merged_branches[@]} 件はworktree使用中のため、worktreeも一緒に削除されます"
+fi
+
 echo ""
 
 # 確認プロンプト
@@ -104,13 +142,36 @@ read -rp "これらのブランチを削除しますか？ [y/N]: " answer
 
 if [[ "$answer" =~ ^[Yy]$ ]]; then
   echo ""
+  
+  # 通常のブランチを削除
   for branch in "${merged_branches[@]}"; do
     if git branch -D "$branch" 2>/dev/null; then
-      echo "✓ 削除: $branch"
+      echo "✓ ブランチ削除: $branch"
     else
       echo "✗ 削除失敗: $branch" >&2
     fi
   done
+  
+  # worktree使用中のブランチを削除（worktree → ブランチの順）
+  for branch in "${worktree_merged_branches[@]}"; do
+    worktree_path=$(get_worktree_path "$branch")
+    
+    # worktreeを削除
+    if git worktree remove "$worktree_path" --force 2>/dev/null; then
+      echo "✓ worktree削除: $worktree_path"
+      
+      # ブランチを削除
+      if git branch -D "$branch" 2>/dev/null; then
+        echo "✓ ブランチ削除: $branch"
+      else
+        echo "✗ ブランチ削除失敗: $branch" >&2
+      fi
+    else
+      echo "✗ worktree削除失敗: $worktree_path" >&2
+      echo "  → ブランチ $branch はスキップされました" >&2
+    fi
+  done
+  
   echo ""
   echo "完了しました。"
 else
