@@ -10,6 +10,7 @@ AI関連の開発ツールのインストール状況と運用メモ。
 |--------|------------------|----------|------|
 | Cursor CLI | Homebrew | `Brewfile` | 公式サポートあり、quarantine属性削除処理込み |
 | Claude Code | curl (公式推奨) | `etc/init/osx/claude-code.sh` | Anthropic公式のネイティブインストール |
+| OpenAI Codex CLI | Homebrew (推奨) | `Brewfile` | GPT-5.3搭載、Homebrew推奨 |
 
 ## Cursor CLI
 
@@ -46,11 +47,29 @@ PATH="$HOME/.local/bin:$PATH:$HOME/bin"
 - `~/.local/bin`: Claude Code等のcurlインストーラーが使用
 - `~/bin`: dotfilesのカスタムスクリプト
 
+## OpenAI Codex CLI
+
+```bash
+brew install codex
+```
+
+- macOSではHomebrewインストールが推奨（npmより管理が容易）
+- GPT-5.3搭載のコーディングエージェント
+
+### 認証
+
+```bash
+codex login
+```
+
+- ブラウザが開きChatGPTアカウントでログイン
+
 ## 確認コマンド
 
 ```bash
 cursor --version
 claude --version
+codex --version
 ```
 
 ---

@@ -76,9 +76,12 @@
 
 #### AI Tools
 
-- reference
+- refarence
   - [docs/AI_TOOLS.md](docs/AI_TOOLS.md)
 - Cursor CLI
   - `brew install --cask cursor-cli`
 - Claude Code
   - `curl -fsSL https://claude.ai/install.sh | bash`
+- OpenAI Codex CLI
+  - `brew install codex`
+  - `codex login` (GPT-5.3搭載)
