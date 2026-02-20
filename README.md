@@ -85,3 +85,6 @@
 - OpenAI Codex CLI
   - `brew install codex`
   - `codex login` (GPT-5.3搭載)
+- Gemini CLI
+  - `brew install gemini-cli`
+  - Google OAuth認証（60 req/min, 1,000 req/day 無料枠）

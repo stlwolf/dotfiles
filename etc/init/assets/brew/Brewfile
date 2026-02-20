@@ -53,6 +53,7 @@ brew 'yarn'
 brew 'zoxide'
 brew 'sketchybar'
 brew 'koekeishiya/formulae/yabai'
+brew 'gemini-cli'
 
 cask 'appcleaner'
 cask 'bitwarden'
@@ -75,6 +76,7 @@ cask 'slack'
 cask 'the-unarchiver'
 cask 'hammerspoon'
 cask 'font-hack-nerd-font'
+
 cask 'cursor-cli'
 cask 'codex'
 

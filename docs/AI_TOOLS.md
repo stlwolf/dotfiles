@@ -8,9 +8,10 @@ AI関連の開発ツールのインストール状況と運用メモ。
 
 | ツール | インストール方法 | 管理場所 | 備考 |
 |--------|------------------|----------|------|
-| Cursor CLI | Homebrew | `Brewfile` | 公式サポートあり、quarantine属性削除処理込み |
+| Cursor CLI | Homebrew (cask) | `Brewfile` | 公式サポートあり、quarantine属性削除処理込み |
 | Claude Code | curl (公式推奨) | `etc/init/osx/claude-code.sh` | Anthropic公式のネイティブインストール |
-| OpenAI Codex CLI | Homebrew (推奨) | `Brewfile` | GPT-5.3搭載、Homebrew推奨 |
+| OpenAI Codex CLI | Homebrew (cask) | `Brewfile` | GPT-5.3搭載、Homebrew推奨 |
+| Gemini CLI | Homebrew (formula) | `Brewfile` | Google製、Gemini 3モデル対応、Node.js依存 |
 
 ## Cursor CLI
 
@@ -64,12 +65,33 @@ codex login
 
 - ブラウザが開きChatGPTアカウントでログイン
 
+## Gemini CLI
+
+```bash
+brew install gemini-cli
+```
+
+- Google製のオープンソースAIエージェント（Apache 2.0）
+- Gemini 3モデル、1Mトークンコンテキストウィンドウ
+- Homebrew管理（Node.js依存は自動解決）
+
+### 認証
+
+```bash
+gemini
+```
+
+- 初回起動時にGoogle OAuthでブラウザ認証
+- 無料枠: 60 req/min, 1,000 req/day（個人Googleアカウント）
+- APIキー利用も可能: `export GEMINI_API_KEY="YOUR_KEY"`
+
 ## 確認コマンド
 
 ```bash
 cursor --version
 claude --version
 codex --version
+gemini --version
 ```
 
 ---

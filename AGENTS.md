@@ -72,8 +72,10 @@ AI IDE検出時にスキップされる設定:
 
 | ツール | インストール方法 | 管理場所 |
 |--------|------------------|----------|
-| Cursor CLI | Homebrew | `etc/init/assets/brew/Brewfile` |
+| Cursor CLI | Homebrew (cask) | `etc/init/assets/brew/Brewfile` |
 | Claude Code | curl | `etc/init/osx/claude-code.sh` |
+| OpenAI Codex CLI | Homebrew (cask) | `etc/init/assets/brew/Brewfile` |
+| Gemini CLI | Homebrew (formula) | `etc/init/assets/brew/Brewfile` |
 
 **PATH設定** (`.bashrc`冒頭):
 ```bash
