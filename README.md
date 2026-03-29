@@ -88,3 +88,7 @@
 - Gemini CLI
   - `brew install gemini-cli`
   - Google OAuth認証（60 req/min, 1,000 req/day 無料枠）
+- Worktrunk（git worktree の並列作業用 CLI）
+  - `brew install worktrunk`（このリポジトリでは `Brewfile` 管理）
+  - シェル連携: `.bashrc` に `eval "$(wt config shell init bash)"` を記載済み（`wt switch` が `cd` 可能になる）
+  - 詳細は [docs/AI_TOOLS.md](docs/AI_TOOLS.md#worktrunk)

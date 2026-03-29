@@ -66,6 +66,8 @@ AI IDE検出時にスキップされる設定:
 - bash-completion読み込み
 - hub/zoxide初期化
 
+Worktrunk（`wt`）のシェル連携は AI IDE でも読み込む（統合ターミナルで `wt switch` がカレントを切り替えられるようにするため）。
+
 **この関数を変更する場合は、既存の検出パターンを維持してください。**
 
 ### AI開発ツールのインストール
@@ -76,6 +78,7 @@ AI IDE検出時にスキップされる設定:
 | Claude Code | curl | `etc/init/osx/claude-code.sh` |
 | OpenAI Codex CLI | Homebrew (cask) | `etc/init/assets/brew/Brewfile` |
 | Gemini CLI | Homebrew (formula) | `etc/init/assets/brew/Brewfile` |
+| Worktrunk | Homebrew (formula) | `etc/init/assets/brew/Brewfile`（シェル連携は `.bashrc`） |
 
 **PATH設定** (`.bashrc`冒頭):
 ```bash

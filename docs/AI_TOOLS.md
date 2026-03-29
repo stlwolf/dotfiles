@@ -12,6 +12,7 @@ AI関連の開発ツールのインストール状況と運用メモ。
 | Claude Code | curl (公式推奨) | `etc/init/osx/claude-code.sh` | Anthropic公式のネイティブインストール |
 | OpenAI Codex CLI | Homebrew (cask) | `Brewfile` | GPT-5.3搭載、Homebrew推奨 |
 | Gemini CLI | Homebrew (formula) | `Brewfile` | Google製、Gemini 3モデル対応、Node.js依存 |
+| Worktrunk | Homebrew (formula) | `Brewfile` + `.bashrc` | [git worktree](https://git-scm.com/docs/git-worktree) 並列作業用 CLI、[公式サイト](https://worktrunk.dev/) |
 
 ## Cursor CLI
 
@@ -85,6 +86,36 @@ gemini
 - 無料枠: 60 req/min, 1,000 req/day（個人Googleアカウント）
 - APIキー利用も可能: `export GEMINI_API_KEY="YOUR_KEY"`
 
+## Worktrunk
+
+[Worktrunk](https://worktrunk.dev/) は AI エージェント向けに git worktree を扱いやすくする CLI（`wt`）。`wt switch` で作業ディレクトリを切り替えるには**シェル連携**が必須。
+
+### インストール
+
+- `Brewfile` に `brew 'worktrunk'` あり。`etc/init/osx/bundle.sh` 経由の `brew bundle` で導入。
+- 手動: `brew install worktrunk`
+
+### シェル連携（このリポジトリ）
+
+`.bashrc` の `tool init` 付近で次を実行している（[公式マニュアル](https://worktrunk.dev/config/#shell-integration) と同じ形）。
+
+```bash
+if command -v wt >/dev/null 2>&1; then
+    eval "$(wt config shell init bash)"
+fi
+```
+
+- `wt config shell install` は **ホームの rc に追記する対話型**のため、dotfiles 管理では使わず上記の `eval` で宣言的に反映する。
+- 新しいターミナルを開くか `source ~/.bashrc` の後、`type wt` が **shell function** になっていれば OK。
+
+### 確認
+
+```bash
+wt --version
+type wt
+wt config show
+```
+
 ## 確認コマンド
 
 ```bash
@@ -92,6 +123,7 @@ cursor --version
 claude --version
 codex --version
 gemini --version
+wt --version
 ```
 
 ---
@@ -114,6 +146,8 @@ gemini --version
 - bash-completion読み込み
 - hub/zoxide初期化
 - OSC 133エスケープシーケンス
+
+Worktrunk のシェル連携は **スキップしない**（統合ターミナルでも `wt switch` の `cd` を有効にするため）。
 
 通常のターミナル（iTerm2、WezTerm等）では全ての設定が有効。
 

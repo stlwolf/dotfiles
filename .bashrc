@@ -292,6 +292,11 @@ if ! is_ai_ide; then
 fi
 
 # tool init
+# Worktrunk（git worktree 管理）: `wt switch` でカレントディレクトリを切り替えるにはシェル連携が必要。
+# 公式: https://worktrunk.dev/config/#shell-integration
+if command -v wt >/dev/null 2>&1; then
+    eval "$(wt config shell init bash)"
+fi
 # AIツールからの実行時はスキップ（遅延を防ぐ）
 if ! is_ai_ide; then
     eval "$(hub alias -s)"
