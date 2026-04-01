@@ -6,7 +6,7 @@ export LANG=ja_JP.UTF-8
 export HISTCONTROL=$HISTCONTROL${HISTCONTROL+,}ignoredups
 export HISTCONTROL=ignoreboth
 
-shopt -u histappend   # .bash_history追記モードは不要なのでOFFに
+shopt -s histappend
 
 # AI IDE検出関数
 # Windsurf, VSCode, Cursor, Claude Codeなどの統合ターミナルかどうかを判定
@@ -39,12 +39,21 @@ else
     eval "$(/opt/homebrew/bin/brew shellenv)"
 fi
 
-function share_history {  # 以下の内容を関数として定義
-   history -a  # .bash_historyに前回コマンドを1行追記
-   history -c  # 端末ローカルの履歴を一旦消去
-   history -r  # .bash_historyから履歴を読み込み直す
+add_prompt_command() {
+    local new_command="$1"
+
+    if [[ -z "${PROMPT_COMMAND:-}" ]]; then
+        PROMPT_COMMAND="$new_command"
+    elif [[ ";$PROMPT_COMMAND;" != *";$new_command;"* ]]; then
+        PROMPT_COMMAND="${PROMPT_COMMAND%;};$new_command"
+    fi
 }
-export PROMPT_COMMAND='share_history'  # 上記関数をプロンプト毎に自動実施
+
+function share_history {
+   history -a  # このシェルの新規履歴を追記
+   history -n  # 他シェルが追記した未読履歴を取り込む
+}
+add_prompt_command 'share_history'
 
 # Homebrew bash-completion
 # AIツールからの実行時はスキップ（遅延を防ぐ）
@@ -105,7 +114,7 @@ if [[ -z "$TMUX" && $- == *i* ]] && ! is_ai_ide; then
     }
 
     trap '__prompt_precmd' DEBUG
-    PROMPT_COMMAND="__prompt_preexec"
+    add_prompt_command '__prompt_preexec'
 fi
 
 #### peco commands
@@ -124,14 +133,18 @@ alias gvi='pvim'
 ## http://qiita.com/comutt/items/f54e755f22508a6c7d78
 if [[ $- == *i* ]]; then
     peco-select-history() {
-        declare l=$(HISTTIMEFORMAT= history | sort -k1,1nr | perl -ne 'BEGIN { my @lines = (); } s/^\s*\d+\s*//; $in=$_; if (!(grep {$in eq $_} @lines)) { push(@lines, $in); print $in; }' | peco --query "$READLINE_LINE")
+        local l
+        history -a
+        history -n
+        l=$(HISTTIMEFORMAT= history | sort -k1,1nr | perl -ne 'BEGIN { my @lines = (); } s/^\s*\d+\s*//; $in=$_; if (!(grep {$in eq $_} @lines)) { push(@lines, $in); print $in; }' | peco --query "$READLINE_LINE")
         READLINE_LINE="$l"
         READLINE_POINT=${#l}
     }
     bind -x '"\C-r": peco-select-history'
 
     peco-branch-name() {
-        declare l=$(git branch --sort=-authordate | grep -v -e '->' | perl -pe 's/\*//g' | perl -pe 's/^\h+//g' | perl -pe 's#^remotes/origin/###' | perl -nle 'print if !$c{$_}++' | peco)
+        local l
+        l=$(git branch --sort=-authordate | grep -v -e '->' | perl -pe 's/\*//g' | perl -pe 's/^\h+//g' | perl -pe 's#^remotes/origin/###' | perl -nle 'print if !$c{$_}++' | peco)
         READLINE_LINE="$READLINE_LINE$l"
         READLINE_POINT=${#l}
     }
@@ -309,4 +322,3 @@ if [ -e "${HOME}/.bashrc.local" ]; then
 fi
 
 export PATH="$PATH:/opt/homebrew/share/git-core/contrib/diff-highlight"
-
