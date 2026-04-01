@@ -148,14 +148,14 @@ PS1="$(remove_last_dollar "$PS1")$(aws_prof) \$ "
 
 # OSC 133 エスケープシーケンス設定 - disabled in TMUX to prevent character corruption
 # AIツールからの実行時は無効化
-remove_prompt_command '__prompt_precmd'
-remove_prompt_command '__prompt_preexec'
-unset -f __prompt_precmd __prompt_preexec 2>/dev/null
 _current_debug_trap="$(trap -p DEBUG 2>/dev/null || true)"
-if [[ "$_current_debug_trap" == *"__prompt_preexec"* ]]; then
-    trap - DEBUG
+trap - DEBUG
+if [[ -n "$_current_debug_trap" && "$_current_debug_trap" != *"__prompt_preexec"* && "$_current_debug_trap" != *"__prompt_precmd"* ]]; then
+    eval "$_current_debug_trap"
 fi
 unset _current_debug_trap
+remove_prompt_command '__prompt_precmd'
+remove_prompt_command '__prompt_preexec'
 
 if [[ -z "$TMUX" && $- == *i* ]] && ! is_ai_ide; then
     _prompt_executing=""
