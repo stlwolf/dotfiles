@@ -41,26 +41,66 @@ fi
 
 add_prompt_command() {
     local new_command="$1"
+    local old_ifs="$IFS"
+    local commands=()
+    local updated_commands=()
+    local command
+    local trimmed
+    local found=0
+    local joined_commands
 
-    if [[ -z "${PROMPT_COMMAND:-}" ]]; then
-        PROMPT_COMMAND="$new_command"
-    elif [[ ";$PROMPT_COMMAND;" != *";$new_command;"* ]]; then
-        PROMPT_COMMAND="${PROMPT_COMMAND%;};$new_command"
+    IFS=';'
+    read -r -a commands <<< "${PROMPT_COMMAND:-}"
+    IFS="$old_ifs"
+
+    for command in "${commands[@]}"; do
+        trimmed="${command#"${command%%[![:space:]]*}"}"
+        trimmed="${trimmed%"${trimmed##*[![:space:]]}"}"
+        [[ -z "$trimmed" ]] && continue
+        updated_commands+=("$trimmed")
+        if [[ "$trimmed" == "$new_command" ]]; then
+            found=1
+        fi
+    done
+
+    if [[ "$found" -eq 0 ]]; then
+        updated_commands+=("$new_command")
     fi
+
+    old_ifs="$IFS"
+    IFS=';'
+    joined_commands="${updated_commands[*]}"
+    IFS="$old_ifs"
+    PROMPT_COMMAND="$joined_commands"
 }
 
 remove_prompt_command() {
     local old_command="$1"
     local old_ifs="$IFS"
+    local commands=()
     local updated_commands=()
     local command
+    local trimmed_old_command
+    local trimmed
     local joined_commands
 
+    trimmed_old_command="${old_command#"${old_command%%[![:space:]]*}"}"
+    trimmed_old_command="${trimmed_old_command%"${trimmed_old_command##*[![:space:]]}"}"
+
     IFS=';'
-    for command in ${PROMPT_COMMAND:-}; do
-        [[ "$command" == "$old_command" || -z "$command" ]] && continue
-        updated_commands+=("$command")
+    read -r -a commands <<< "${PROMPT_COMMAND:-}"
+    IFS="$old_ifs"
+
+    for command in "${commands[@]}"; do
+        trimmed="${command#"${command%%[![:space:]]*}"}"
+        trimmed="${trimmed%"${trimmed##*[![:space:]]}"}"
+        [[ -z "$trimmed" ]] && continue
+        [[ "$trimmed" == "$trimmed_old_command" ]] && continue
+        updated_commands+=("$trimmed")
     done
+
+    old_ifs="$IFS"
+    IFS=';'
     joined_commands="${updated_commands[*]}"
     IFS="$old_ifs"
 
@@ -111,7 +151,11 @@ PS1="$(remove_last_dollar "$PS1")$(aws_prof) \$ "
 remove_prompt_command '__prompt_precmd'
 remove_prompt_command '__prompt_preexec'
 unset -f __prompt_precmd __prompt_preexec 2>/dev/null
-trap - DEBUG
+_current_debug_trap="$(trap -p DEBUG 2>/dev/null || true)"
+if [[ "$_current_debug_trap" == *"__prompt_preexec"* ]]; then
+    trap - DEBUG
+fi
+unset _current_debug_trap
 
 if [[ -z "$TMUX" && $- == *i* ]] && ! is_ai_ide; then
     _prompt_executing=""
