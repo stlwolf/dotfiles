@@ -150,7 +150,7 @@ PS1="$(remove_last_dollar "$PS1")$(aws_prof) \$ "
 # AIツールからの実行時は無効化
 _current_debug_trap="$(trap -p DEBUG 2>/dev/null || true)"
 trap - DEBUG
-if [[ -n "$_current_debug_trap" && "$_current_debug_trap" != *"__prompt_preexec"* && "$_current_debug_trap" != *"__prompt_precmd"* ]]; then
+if [[ -n "$_current_debug_trap" && "$_current_debug_trap" != *"__prompt_preexec"* && "$_current_debug_trap" != *"__prompt_precmd"* && "$_current_debug_trap" != *"__prompt_debug_trap"* ]]; then
     eval "$_current_debug_trap"
 fi
 unset _current_debug_trap
@@ -180,7 +180,22 @@ if [[ -z "$TMUX" && $- == *i* ]] && ! is_ai_ide; then
         _prompt_executing=1
     }
 
-    trap '__prompt_preexec' DEBUG
+    _previous_debug_trap_command=""
+    _debug_trap_definition="$(trap -p DEBUG 2>/dev/null || true)"
+    if [[ -n "$_debug_trap_definition" ]]; then
+        _previous_debug_trap_command="${_debug_trap_definition#trap -- \'}"
+        _previous_debug_trap_command="${_previous_debug_trap_command%\' DEBUG}"
+    fi
+    unset _debug_trap_definition
+
+    function __prompt_debug_trap() {
+        if [[ -n "$_previous_debug_trap_command" ]]; then
+            eval "$_previous_debug_trap_command"
+        fi
+        __prompt_preexec
+    }
+
+    trap '__prompt_debug_trap' DEBUG
     add_prompt_command '__prompt_precmd'
 fi
 
@@ -201,8 +216,7 @@ alias gvi='pvim'
 if [[ $- == *i* ]]; then
     peco-select-history() {
         local l
-        history -a
-        history -n
+        share_history
         l=$(HISTTIMEFORMAT= history | sort -k1,1nr | perl -ne 'BEGIN { my @lines = (); } s/^\s*\d+\s*//; $in=$_; if (!(grep {$in eq $_} @lines)) { push(@lines, $in); print $in; }' | peco --query "$READLINE_LINE")
         READLINE_LINE="$l"
         READLINE_POINT=${#l}
