@@ -49,6 +49,24 @@ add_prompt_command() {
     fi
 }
 
+remove_prompt_command() {
+    local old_command="$1"
+    local old_ifs="$IFS"
+    local updated_commands=()
+    local command
+    local joined_commands
+
+    IFS=';'
+    for command in ${PROMPT_COMMAND:-}; do
+        [[ "$command" == "$old_command" || -z "$command" ]] && continue
+        updated_commands+=("$command")
+    done
+    joined_commands="${updated_commands[*]}"
+    IFS="$old_ifs"
+
+    PROMPT_COMMAND="$joined_commands"
+}
+
 function share_history {
    history -a  # このシェルの新規履歴を追記
    history -n  # 他シェルが追記した未読履歴を取り込む
@@ -90,6 +108,11 @@ PS1="$(remove_last_dollar "$PS1")$(aws_prof) \$ "
 
 # OSC 133 エスケープシーケンス設定 - disabled in TMUX to prevent character corruption
 # AIツールからの実行時は無効化
+remove_prompt_command '__prompt_precmd'
+remove_prompt_command '__prompt_preexec'
+unset -f __prompt_precmd __prompt_preexec 2>/dev/null
+trap - DEBUG
+
 if [[ -z "$TMUX" && $- == *i* ]] && ! is_ai_ide; then
     _prompt_executing=""
     function __prompt_precmd() {
@@ -113,8 +136,8 @@ if [[ -z "$TMUX" && $- == *i* ]] && ! is_ai_ide; then
         _prompt_executing=1
     }
 
-    trap '__prompt_precmd' DEBUG
-    add_prompt_command '__prompt_preexec'
+    trap '__prompt_preexec' DEBUG
+    add_prompt_command '__prompt_precmd'
 fi
 
 #### peco commands
