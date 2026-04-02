@@ -219,7 +219,7 @@ if [[ $- == *i* ]]; then
     peco-select-history() {
         local l
         share_history
-        l=$(HISTTIMEFORMAT= history | sort -k1,1nr | perl -ne 'BEGIN { my @lines = (); } s/^\s*\d+\s*//; $in=$_; if (!(grep {$in eq $_} @lines)) { push(@lines, $in); print $in; }' | peco --query "$READLINE_LINE")
+        l=$(HISTTIMEFORMAT= history | LC_ALL=C sort -k1,1nr | perl -ne 'BEGIN { my @lines = (); } s/^\s*\d+\s*//; $in=$_; if (!(grep {$in eq $_} @lines)) { push(@lines, $in); print $in; }' | peco --query "$READLINE_LINE")
         READLINE_LINE="$l"
         READLINE_POINT=${#l}
     }
