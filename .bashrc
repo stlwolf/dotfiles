@@ -174,8 +174,10 @@ if [[ -z "$TMUX" && $- == *i* ]] && ! is_ai_ide; then
         _prompt_executing=0
     }
     function __prompt_preexec() {
-        PS1="$_PROMPT_SAVE_PS1"
-        PS2="$_PROMPT_SAVE_PS2"
+        if [[ -n "$_PROMPT_SAVE_PS1" ]]; then
+            PS1="$_PROMPT_SAVE_PS1"
+            PS2="$_PROMPT_SAVE_PS2"
+        fi
         printf "\033]133;C;\007"
         _prompt_executing=1
     }
