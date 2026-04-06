@@ -30,6 +30,9 @@ config.use_fancy_tab_bar = false
 config.scrollback_lines = 8192
 config.enable_scroll_bar = true
 
+-- Cmd キーで tmux の mouse reporting をバイパスする
+config.bypass_mouse_reporting_modifiers = 'SUPER'
+
 -- https://zenn.dev/link/comments/7e0e1d3d8619dc
 function random_color_scheme()
   math.randomseed(os.time())
@@ -81,6 +84,15 @@ wezterm.on('random-background-image', function(window, pane)
     window:set_config_overrides(overrides)
   end
 end)
+
+-- Cmd+Click で URL を開く（tmux mouse mode でも動作）
+config.mouse_bindings = {
+  {
+    event = { Up = { streak = 1, button = 'Left' } },
+    mods = 'SUPER',
+    action = act.OpenLinkAtMouseCursor,
+  },
+}
 
 config.keys = {
   { key = 'f', mods = 'CTRL|CMD', action = wezterm.action.ToggleFullScreen },
