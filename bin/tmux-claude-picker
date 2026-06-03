@@ -1,0 +1,134 @@
+#!/usr/bin/env bash
+#
+# tmux-claude-picker — fzf popup listing the panes of the *current* tmux session
+# (Claude/Codex panes tagged CC/CX) and jumping to the selected one. Bound to
+# `prefix + C` and launched via `tmux display-popup -E` (see .tmux.conf).
+#
+# Why: work happens in one session with many windows; the other sessions are
+# mostly idle shells spun up by orchestration, so spanning all of them only adds
+# noise. This scopes to the current session and lists at window/pane granularity
+# — finer than the window-name CC:/CX: prefix in .tmux.conf — previews each
+# pane's scrollback, and switches focus on Enter.
+#
+# AI detection (keep in sync with .tmux.conf automatic-rename-format):
+#   Claude Code … pane_title starts with a status glyph (✳ U+2733 or a braille
+#     spinner frame U+2800–U+28FF) that Claude sets via OSC and keeps even while a
+#     foreground child (git/vim/build) runs; falls back to a semver
+#     pane_current_command (e.g. 2.1.161) when no title glyph is present.
+#   Codex … pane_current_command matches codex*.
+# Byte-wise glob matching under LC_ALL=C (same approach as the peco history sort)
+# keeps the glyph test correct regardless of the caller's locale.
+#
+set -euo pipefail
+
+# Absolute path to this script: the fzf reload bind must re-invoke *this* file,
+# not $0 (fzf runs binds as `$SHELL -c`, where $0 is the shell name), and it must
+# work from display-popup, whose non-interactive shell may lack ~/bin on PATH.
+SELF="$(cd "$(dirname "$0")" && pwd)/$(basename "$0")"
+
+# Byte-wise matching for the glyph test; UTF-8 titles/paths pass through as bytes.
+export LC_ALL=C
+
+# Current session only: the popup is attached to the calling client, so
+# #{session_name} is the session the user is in. -s lists every pane in all of
+# that session's windows.
+current_session() { tmux display-message -p '#{session_name}'; }
+
+list_panes() {
+  # Process substitution (not `tmux | while`) keeps the loop in this shell so
+  # prev_win survives across iterations — a pipeline would run it in a subshell.
+  local pid cmd win path title tag name dir loc prev_win=''
+  while IFS=$'\t' read -r pid cmd win path title; do
+      # Drop any record whose first field is not a pane id (%N). pane_title and
+      # pane_current_path are attacker-settable (OSC titles / directory names) and
+      # may contain newlines; `tmux -F` emits the raw bytes, so a newline splits
+      # one pane across rows. `read` consumes the newline as a record separator
+      # (folding it afterwards is therefore impossible) — instead the split-off
+      # fragment rows fail this check and are dropped. Also fixes a genuine bug:
+      # a legitimately multi-line title would otherwise show a broken extra row.
+      [[ "$pid" =~ ^%[0-9]+$ ]] || continue
+
+      # Detect the AI tag on the raw title's leading bytes (✳/braille are E2…,
+      # never C0, so the sanitize step below does not disturb this).
+      tag='  '   # plain pane
+      case "$title" in
+        $'\xe2\x9c\xb3'* | $'\xe2'[$'\xa0'-$'\xa3']*) tag='CC' ;;  # ✳ or braille → Claude
+      esac
+      if [ "$tag" = '  ' ]; then
+        if [[ "$cmd" =~ ^[0-9]+\.[0-9]+\.[0-9]+$ ]]; then
+          tag='CC'
+        else
+          case "$cmd" in codex*) tag='CX' ;; esac
+        fi
+      fi
+
+      # Sanitize for display: replace any C0 control byte (tab, CR, ESC, …) with a
+      # space so a crafted title can't shift columns or emit ANSI/cursor escapes.
+      title="${title//[$'\x01'-$'\x1f']/ }"
+      dir="${path##*/}"; dir="${dir//[$'\x01'-$'\x1f']/ }"
+
+      # AI panes show their session title (the glyph also conveys live status);
+      # plain panes just show the foreground command. The directory basename is
+      # a separate column either way.
+      if [ "$tag" = '  ' ]; then
+        name="$cmd"
+      else
+        name="${title:-$cmd}"
+      fi
+
+      # Window number leads its first pane; further panes of the same (split)
+      # window indent under it with a tree connector instead of repeating the
+      # number. list-panes -s returns panes grouped in window order, so a repeat
+      # of $win is a sibling pane. "  └  " is sized to the "wNN  " column so the
+      # tag stays aligned (bytes ≥ 5 ⇒ %-5s leaves it as the rendered 5 columns).
+      if [ "$win" != "$prev_win" ]; then
+        loc="w${win}"
+        prev_win="$win"
+      else
+        loc='  └  '
+      fi
+
+      # Field 1 (pane_id) is the hidden key fzf passes to the preview/jump; the
+      # rest is a single display/search field, read top-to-bottom by window:
+      # <window> <tag> <title> <directory>.
+      printf '%s\t%-5s %s %s  %s\n' "$pid" "$loc" "$tag" "$name" "$dir"
+  done < <(tmux list-panes -s -t "$(current_session)" -F \
+    '#{pane_id}	#{pane_current_command}	#{window_index}	#{pane_current_path}	#{pane_title}')
+}
+
+if [ "${1:-}" = "--list" ]; then
+  list_panes
+  exit 0
+fi
+
+command -v fzf >/dev/null 2>&1 || { echo "tmux-claude-picker: fzf not found" >&2; exit 1; }
+[ -n "${TMUX:-}" ] || { echo "tmux-claude-picker: not inside tmux" >&2; exit 1; }
+
+# --with-nth=2 shows/searches field 2 only, keeping pane_id (field 1) hidden and
+# out of the query. No --nth: with --with-nth set it would re-index the
+# transformed (single-field) line and match nothing. {1} in --preview/--bind
+# still resolves to the original field 1 (pane_id).
+sel="$(
+  list_panes | fzf \
+    --ansi \
+    --layout=reverse \
+    --delimiter=$'\t' \
+    --with-nth=2 \
+    --prompt="[$(current_session)] ▸ " \
+    --header='↵ jump   ctrl-r refresh   esc cancel' \
+    --preview='tmux capture-pane -ep -S -200 -t {1} 2>/dev/null || true' \
+    --preview-window='right,55%,wrap' \
+    --bind="ctrl-r:reload(\"$SELF\" --list)"
+)" || exit 0   # fzf exits non-zero on esc/no match — treat as cancel.
+
+[ -n "$sel" ] || exit 0
+pid="${sel%%$'\t'*}"
+[ -n "$pid" ] || exit 0
+
+# The target is always in the current session, so selecting its window and pane
+# moves the attached client's view directly — no switch-client needed. pane_id
+# is unique server-wide, so -t resolves the window and pane unambiguously. Guard
+# the race where the pane is closed between listing and selection: tmux errors,
+# so swallow it and exit quietly instead of dying under `set -e`.
+tmux select-window -t "$pid" 2>/dev/null || exit 0
+tmux select-pane -t "$pid" 2>/dev/null || exit 0
