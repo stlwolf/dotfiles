@@ -37,12 +37,19 @@ current_session() { tmux display-message -p '#{session_name}'; }
 list_panes() {
   # Process substitution (not `tmux | while`) keeps the loop in this shell so
   # prev_win survives across iterations — a pipeline would run it in a subshell.
-  local pid cmd win path title tag name loc prev_win=''
+  local pid cmd win path title tag name dir loc prev_win=''
   while IFS=$'\t' read -r pid cmd win path title; do
-      # OSC titles are arbitrary: fold stray tabs/newlines so one pane = one row.
-      title="${title//$'\t'/ }"
-      title="${title//$'\n'/ }"
+      # Drop any record whose first field is not a pane id (%N). pane_title and
+      # pane_current_path are attacker-settable (OSC titles / directory names) and
+      # may contain newlines; `tmux -F` emits the raw bytes, so a newline splits
+      # one pane across rows. `read` consumes the newline as a record separator
+      # (folding it afterwards is therefore impossible) — instead the split-off
+      # fragment rows fail this check and are dropped. Also fixes a genuine bug:
+      # a legitimately multi-line title would otherwise show a broken extra row.
+      [[ "$pid" =~ ^%[0-9]+$ ]] || continue
 
+      # Detect the AI tag on the raw title's leading bytes (✳/braille are E2…,
+      # never C0, so the sanitize step below does not disturb this).
       tag='  '   # plain pane
       case "$title" in
         $'\xe2\x9c\xb3'* | $'\xe2'[$'\xa0'-$'\xa3']*) tag='CC' ;;  # ✳ or braille → Claude
@@ -54,6 +61,11 @@ list_panes() {
           case "$cmd" in codex*) tag='CX' ;; esac
         fi
       fi
+
+      # Sanitize for display: replace any C0 control byte (tab, CR, ESC, …) with a
+      # space so a crafted title can't shift columns or emit ANSI/cursor escapes.
+      title="${title//[$'\x01'-$'\x1f']/ }"
+      dir="${path##*/}"; dir="${dir//[$'\x01'-$'\x1f']/ }"
 
       # AI panes show their session title (the glyph also conveys live status);
       # plain panes just show the foreground command. The directory basename is
@@ -79,7 +91,7 @@ list_panes() {
       # Field 1 (pane_id) is the hidden key fzf passes to the preview/jump; the
       # rest is a single display/search field, read top-to-bottom by window:
       # <window> <tag> <title> <directory>.
-      printf '%s\t%-5s %s %s  %s\n' "$pid" "$loc" "$tag" "$name" "${path##*/}"
+      printf '%s\t%-5s %s %s  %s\n' "$pid" "$loc" "$tag" "$name" "$dir"
   done < <(tmux list-panes -s -t "$(current_session)" -F \
     '#{pane_id}	#{pane_current_command}	#{window_index}	#{pane_current_path}	#{pane_title}')
 }
@@ -106,7 +118,7 @@ sel="$(
     --header='↵ jump   ctrl-r refresh   esc cancel' \
     --preview='tmux capture-pane -ep -S -200 -t {1} 2>/dev/null || true' \
     --preview-window='right,55%,wrap' \
-    --bind="ctrl-r:reload($SELF --list)"
+    --bind="ctrl-r:reload(\"$SELF\" --list)"
 )" || exit 0   # fzf exits non-zero on esc/no match — treat as cancel.
 
 [ -n "$sel" ] || exit 0
@@ -115,6 +127,8 @@ pid="${sel%%$'\t'*}"
 
 # The target is always in the current session, so selecting its window and pane
 # moves the attached client's view directly — no switch-client needed. pane_id
-# is unique server-wide, so -t resolves the window and pane unambiguously.
-tmux select-window -t "$pid"
-tmux select-pane -t "$pid"
+# is unique server-wide, so -t resolves the window and pane unambiguously. Guard
+# the race where the pane is closed between listing and selection: tmux errors,
+# so swallow it and exit quietly instead of dying under `set -e`.
+tmux select-window -t "$pid" 2>/dev/null || exit 0
+tmux select-pane -t "$pid" 2>/dev/null || exit 0
