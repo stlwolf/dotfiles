@@ -34,6 +34,15 @@ if is_ai_ide; then
     export PATH="/opt/homebrew/bin:/opt/homebrew/sbin${PATH+:$PATH}"
     export MANPATH="/opt/homebrew/share/man${MANPATH+:$MANPATH}:"
     export INFOPATH="/opt/homebrew/share/info:${INFOPATH:-}"
+
+    # WezTerm socket auto-detect for AI IDE
+    if [[ -z "${WEZTERM_UNIX_SOCKET:-}" ]]; then
+        _wez_sock=$(ls -t ~/.local/share/wezterm/gui-sock-* 2>/dev/null | head -1)
+        if [[ -n "$_wez_sock" ]]; then
+            export WEZTERM_UNIX_SOCKET="$_wez_sock"
+        fi
+        unset _wez_sock
+    fi
 else
     # 通常のターミナルでは brew shellenv を実行
     eval "$(/opt/homebrew/bin/brew shellenv)"
