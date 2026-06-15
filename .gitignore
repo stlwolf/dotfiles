@@ -28,3 +28,7 @@ Temporary Items
 .apdisk
 
 .idea/*
+
+# AI tooling / scratch
+tmp/
+.antigravitycli/

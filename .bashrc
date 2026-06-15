@@ -34,6 +34,17 @@ if is_ai_ide; then
     export PATH="/opt/homebrew/bin:/opt/homebrew/sbin${PATH+:$PATH}"
     export MANPATH="/opt/homebrew/share/man${MANPATH+:$MANPATH}:"
     export INFOPATH="/opt/homebrew/share/info:${INFOPATH:-}"
+
+    # WezTerm socket auto-detect for AI IDE (mtime-newest; -nt で ls/SC2012 を回避)
+    if [[ -z "${WEZTERM_UNIX_SOCKET:-}" ]]; then
+        _wez_newest=""
+        for _wez_sock in "$HOME"/.local/share/wezterm/gui-sock-*; do
+            [[ -S "$_wez_sock" ]] || continue
+            [[ -z "$_wez_newest" || "$_wez_sock" -nt "$_wez_newest" ]] && _wez_newest="$_wez_sock"
+        done
+        [[ -n "$_wez_newest" ]] && export WEZTERM_UNIX_SOCKET="$_wez_newest"
+        unset _wez_sock _wez_newest
+    fi
 else
     # 通常のターミナルでは brew shellenv を実行
     eval "$(/opt/homebrew/bin/brew shellenv)"

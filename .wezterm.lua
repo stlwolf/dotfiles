@@ -135,4 +135,25 @@ config.window_background_image_hsb = {
   saturation = 1.0,
 }
 
+-- AI Mode: shell から user-var (OSC 1337 SetUserVar) を受けて toast 通知を出す
+wezterm.on('user-var-changed', function(window, pane, name, value)
+  if name == 'ai_notify' then
+    local decoded = value
+    local title, body, timeout_str = decoded:match('^([^|]*)|([^|]*)|([^|]*)$')
+    if not title then
+      -- パイプ区切りでない値（将来のフォーマット変更や手動送信）は生値を title に
+      title, body, timeout_str = decoded, '', nil
+    end
+    title = (title and title ~= '') and title or 'AI Mode'
+    body = body or ''
+    local timeout = tonumber(timeout_str) or 4000
+
+    local message = (body ~= '') and (title .. ': ' .. body) or title
+    window:toast_notification('WezTerm AI', message, nil, timeout)
+    wezterm.log_info('ai_notify: ' .. title .. ' - ' .. body)
+  elseif name == 'ai_status' then
+    wezterm.log_info('ai_status: ' .. value)
+  end
+end)
+
 return config
