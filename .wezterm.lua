@@ -148,11 +148,10 @@ wezterm.on('user-var-changed', function(window, pane, name, value)
     body = body or ''
     local timeout = tonumber(timeout_str) or 4000
 
-    window:toast_notification('WezTerm AI', title .. ': ' .. body, nil, timeout)
+    local message = (body ~= '') and (title .. ': ' .. body) or title
+    window:toast_notification('WezTerm AI', message, nil, timeout)
     wezterm.log_info('ai_notify: ' .. title .. ' - ' .. body)
-  end
-
-  if name == 'ai_status' then
+  elseif name == 'ai_status' then
     wezterm.log_info('ai_status: ' .. value)
   end
 end)

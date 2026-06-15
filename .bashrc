@@ -39,7 +39,7 @@ if is_ai_ide; then
     if [[ -z "${WEZTERM_UNIX_SOCKET:-}" ]]; then
         _wez_newest=""
         for _wez_sock in "$HOME"/.local/share/wezterm/gui-sock-*; do
-            [[ -e "$_wez_sock" ]] || continue
+            [[ -S "$_wez_sock" ]] || continue
             [[ -z "$_wez_newest" || "$_wez_sock" -nt "$_wez_newest" ]] && _wez_newest="$_wez_sock"
         done
         [[ -n "$_wez_newest" ]] && export WEZTERM_UNIX_SOCKET="$_wez_newest"
