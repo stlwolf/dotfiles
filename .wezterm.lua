@@ -187,10 +187,16 @@ wezterm.on('open-uri', function(window, pane, uri)
     return string.char(tonumber(hex, 16))
   end)
 
-  -- oe-view / glow は PATH に頼らず絶対パスで呼ぶ（GUI 起動の WezTerm は ~/bin / homebrew を
-  -- PATH に含まないことがある）。path は単一 argv 要素で渡す（文字列連結でシェルを経由しない）。
+  -- oe-view は絶対パスで呼ぶ。さらに oe-view が内部で引く wez/glow は PATH 依存のため、GUI の
+  -- 最小 PATH（~/bin・homebrew を含まない）では見つからず oe-view が exit 2 で無音になる（#210）。
+  -- /usr/bin/env で PATH を補ってから oe-view を exec する（path は単一 argv 要素・shell 非経由）。
+  local home = os.getenv('HOME') or ''
   local ok, err = pcall(function()
-    wezterm.background_child_process { OE_VIEW, '--from-link', path }
+    wezterm.background_child_process {
+      '/usr/bin/env',
+      'PATH=' .. home .. '/bin:/opt/homebrew/bin:/usr/local/bin:/usr/bin:/bin',
+      OE_VIEW, '--from-link', path,
+    }
   end)
   if not ok then
     -- oe-view 不在(PR1 未マージ)や起動失敗でも Lua をクラッシュさせず、ログに残して静かに分かるようにする。
