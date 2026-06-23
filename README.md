@@ -92,3 +92,15 @@
   - `brew install worktrunk`（このリポジトリでは `Brewfile` 管理）
   - シェル連携: `.bashrc` に `eval "$(wt config shell init bash)"` を記載済み（`wt switch` が `cd` 可能になる）
   - 詳細は [docs/AI_TOOLS.md](docs/AI_TOOLS.md#worktrunk)
+
+#### WezTerm
+
+- クリッカブル md ビューア連携（`.wezterm.lua`）
+  - ターミナル出力中に現れる ai-development-hub の生成 doc(md) の絶対パスを **Cmd+Click** でクリッカブルにし、ブラウザに飛ばさず hub の `oe-view`（glow ペイン表示）を起動する
+  - 仕組み: `hyperlink_rules` で対象パスを `oeview://` スキームのリンクにし、`open-uri` ハンドラがクリックを横取りして `oe-view --from-link <絶対パス>` を起動する（種別/allowlist/存在チェックは `oe-view` 側の責務）
+  - 対象パス: `~/.../ai-development-hub/projects/<name>/docs/{plans,episodes,decisions,discussions}/**.md`（過剰マッチ防止のため厳格に限定）
+  - 前提:
+    - Cmd（SUPER）+ Click。`bypass_mouse_reporting_modifiers = 'SUPER'` により tmux の mouse mode 下でも WezTerm がクリックを処理できる
+    - tmux 下でも regex ベースの `hyperlink_rules` は描画テキストに対して効くため `terminal-features` の `hyperlinks` 有効化は不要（明示的な OSC 8 リンクを使う場合のみ必要）
+    - `oe-view` は hub 側の CLI。GUI 起動の WezTerm は PATH に `~/bin`/homebrew を含まないことがあるため絶対パスで呼ぶ
+  - 設定スニペットの出どころ: [stlwolf/ai-development-hub#210](https://github.com/stlwolf/ai-development-hub/issues/210)

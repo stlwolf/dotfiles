@@ -94,6 +94,19 @@ config.mouse_bindings = {
   },
 }
 
+-- クリッカブル md ビューア連携（hub #210）:
+-- ターミナル出力中に現れる生成 doc(md) の絶対パスを Cmd+Click でクリッカブルにする。
+-- 既定規則(https / mailto 等)を消さずベースにし、oeview スキームの規則を table.insert で追加する。
+-- クリックの横取りは下部の 'open-uri' ハンドラが担当（oe-view を起動）。
+config.hyperlink_rules = wezterm.default_hyperlink_rules()
+table.insert(config.hyperlink_rules, {
+  -- ai-development-hub の projects/<name>/docs/{plans,episodes,decisions,discussions}/**.md
+  -- の絶対パスだけに厳格に限定（過剰マッチ防止・空白なしパス前提）。
+  regex = [[/Users/\S+/ai-development-hub/projects/[^/\s]+/docs/(?:plans|episodes|decisions|discussions)/\S+\.md]],
+  -- $0 はマッチ全体(= /Users/... の絶対パス)。結果は oeview:///Users/... （三スラッシュ）になる。
+  format = 'oeview://$0',
+})
+
 config.keys = {
   { key = 'f', mods = 'CTRL|CMD', action = wezterm.action.ToggleFullScreen },
   { key = 'A', mods = 'CTRL', action = wezterm.action.EmitEvent 'random-color-scheme' },
@@ -154,6 +167,37 @@ wezterm.on('user-var-changed', function(window, pane, name, value)
   elseif name == 'ai_status' then
     wezterm.log_info('ai_status: ' .. value)
   end
+end)
+
+-- クリッカブル md ビューア連携（hub #210）: oeview:// リンクのクリックを横取りして oe-view を起動する。
+-- 種別/allowlist/存在チェック・サニタイズは oe-view 側の責務。ここは parse と argv 起動のみ。
+local OE_VIEW =
+  '/Users/eddy/work/repos/github.com/stlwolf/ai-development-hub/projects/orchestration-engine/bin/oe-view'
+
+wezterm.on('open-uri', function(window, pane, uri)
+  local prefix = 'oeview://'
+  if uri:sub(1, #prefix) ~= prefix then
+    return -- oeview: 以外は既定動作（https 等はブラウザで開く）
+  end
+
+  -- 接頭辞を除去して絶対パスを取り出す（oeview:///Users/... → /Users/...）
+  local path = uri:sub(#prefix + 1)
+  -- パスに %XX のパーセントエンコードが含まれていれば復号（空白なしパスでは実質 no-op）
+  path = path:gsub('%%(%x%x)', function(hex)
+    return string.char(tonumber(hex, 16))
+  end)
+
+  -- oe-view / glow は PATH に頼らず絶対パスで呼ぶ（GUI 起動の WezTerm は ~/bin / homebrew を
+  -- PATH に含まないことがある）。path は単一 argv 要素で渡す（文字列連結でシェルを経由しない）。
+  local ok, err = pcall(function()
+    wezterm.background_child_process { OE_VIEW, '--from-link', path }
+  end)
+  if not ok then
+    -- oe-view 不在(PR1 未マージ)や起動失敗でも Lua をクラッシュさせず、ログに残して静かに分かるようにする。
+    wezterm.log_error('oeview: failed to launch oe-view: ' .. tostring(err))
+  end
+
+  return false -- ブラウザ等の既定動作を抑止する
 end)
 
 return config
