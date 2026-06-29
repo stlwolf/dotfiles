@@ -100,9 +100,9 @@ config.mouse_bindings = {
 -- クリックの横取りは下部の 'open-uri' ハンドラが担当（oe-view を起動）。
 config.hyperlink_rules = wezterm.default_hyperlink_rules()
 table.insert(config.hyperlink_rules, {
-  -- ai-development-hub の projects/<name>/docs/{plans,episodes,decisions,discussions}/**.md
-  -- の絶対パスだけに厳格に限定（過剰マッチ防止・空白なしパス前提）。
-  regex = [[/Users/\S+/ai-development-hub/projects/[^/\s]+/docs/(?:plans|episodes|decisions|discussions)/\S+\.md]],
+  -- $HOME 配下の絶対パス .md を広く対象にする（dir 構造で絞らない・空白なしパス前提）。
+  -- md→glow は read-only。安全弁は oe-view 側（非md拒否・realpath・$HOME allowlist）に集約。
+  regex = [[/Users/eddy/\S+\.md]],
   -- $0 はマッチ全体(= /Users/... の絶対パス)。結果は oeview:///Users/... （三スラッシュ）になる。
   format = 'oeview://$0',
 })
