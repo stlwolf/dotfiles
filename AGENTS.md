@@ -79,6 +79,7 @@ Worktrunk（`wt`）のシェル連携は AI IDE でも読み込む（統合タ�
 | OpenAI Codex CLI | Homebrew (cask) | `etc/init/assets/brew/Brewfile` |
 | Gemini CLI | Homebrew (formula) | `etc/init/assets/brew/Brewfile` |
 | Worktrunk | Homebrew (formula) | `etc/init/assets/brew/Brewfile`（シェル連携は `.bashrc`） |
+| Docker Sandboxes (`sbx`) | Homebrew (cask・`docker/tap`) | `etc/init/assets/brew/Brewfile`（cask の信頼は `etc/init/osx/bundle.sh`） |
 
 **PATH設定** (`.bashrc`冒頭):
 ```bash

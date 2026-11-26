@@ -13,6 +13,7 @@ AI関連の開発ツールのインストール状況と運用メモ。
 | OpenAI Codex CLI | Homebrew (cask) | `Brewfile` | GPT-5.3搭載、Homebrew推奨 |
 | Gemini CLI | Homebrew (formula) | `Brewfile` | Google製、Gemini 3モデル対応、Node.js依存 |
 | Worktrunk | Homebrew (formula) | `Brewfile` + `.bashrc` | [git worktree](https://git-scm.com/docs/git-worktree) 並列作業用 CLI、[公式サイト](https://worktrunk.dev/) |
+| Docker Sandboxes (`sbx`) | Homebrew (cask・`docker/tap`) | `Brewfile` + `bundle.sh` | エージェントを microVM の中で動かす CLI、[公式文書](https://docs.docker.com/ai/sandboxes/) |
 
 ## Cursor CLI
 
@@ -116,6 +117,37 @@ type wt
 wt config show
 ```
 
+## Docker Sandboxes
+
+[Docker Sandboxes](https://docs.docker.com/ai/sandboxes/) は、コーディングエージェントをエージェントごとの microVM の中で動かす CLI（`sbx`）。microVM は専用のカーネルと専用の Docker daemon を持ち、手元の Docker daemon には届かない。Docker Desktop は要らない。
+
+### インストール
+
+- 条件: Apple silicon と macOS 14 以上。
+- `Brewfile` に `tap 'docker/tap'` と `cask 'docker/tap/sbx'` あり。`etc/init/osx/bundle.sh` 経由の `brew bundle` で導入。
+- `docker/tap` は公式でない tap なので、Homebrew は信頼済みにするまで cask を読み込まない。`bundle.sh` が `brew bundle` の前に `brew trust --cask docker/tap/sbx` を実行する。tap 全体ではなく、この cask だけを信頼している。
+- 手動: `brew trust --cask docker/tap/sbx && brew install --cask docker/tap/sbx`
+
+### 認証
+
+```bash
+sbx login
+```
+
+- ブラウザで Docker のアカウントにログインする。
+- エージェントの認証は別に要る。Claude Code の定額のプランは、sandbox の中で `/login` を使う。
+
+### シェル連携
+
+- bash・zsh・fish の補完は、cask が Homebrew の補完の置き場に置く。`.bashrc` の変更は要らない。
+
+### 確認
+
+```bash
+sbx version
+sbx ls
+```
+
 ## 確認コマンド
 
 ```bash
@@ -124,6 +156,7 @@ claude --version
 codex --version
 gemini --version
 wt --version
+sbx version
 ```
 
 ---

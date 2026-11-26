@@ -92,6 +92,10 @@
   - `brew install worktrunk`（このリポジトリでは `Brewfile` 管理）
   - シェル連携: `.bashrc` に `eval "$(wt config shell init bash)"` を記載済み（`wt switch` が `cd` 可能になる）
   - 詳細は [docs/AI_TOOLS.md](docs/AI_TOOLS.md#worktrunk)
+- Docker Sandboxes（エージェントを microVM の中で動かす CLI）
+  - `brew trust --cask docker/tap/sbx && brew install --cask docker/tap/sbx`（このリポジトリでは `Brewfile` 管理）
+  - `sbx login`（Docker のアカウント）
+  - 詳細は [docs/AI_TOOLS.md](docs/AI_TOOLS.md#docker-sandboxes)
 
 #### WezTerm
 

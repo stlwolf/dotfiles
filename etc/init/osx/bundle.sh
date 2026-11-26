@@ -24,6 +24,11 @@ if has "brew"; then
         brew bundle dump
     fi
 
+    # sbx (Docker Sandboxes) は公式でない tap の cask。
+    # Homebrew は信頼済みにするまで読み込まないので、bundle の前に信頼する。
+    # trust を持たない古い brew では失敗するので無視する。
+    brew trust --cask docker/tap/sbx 2>/dev/null || true
+
     brew bundle
 
     # cursor-cli quarantine属性削除

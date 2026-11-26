@@ -3,6 +3,7 @@ tap 'homebrew/cask'
 tap 'homebrew/cask-fonts'
 tap 'homebrew/core'
 tap 'FelixKratz/formulae'
+tap 'docker/tap'
 
 brew 'act'
 brew 'asdf'
@@ -82,6 +83,7 @@ cask 'font-hack-nerd-font'
 
 cask 'cursor-cli'
 cask 'codex'
+cask 'docker/tap/sbx'
 
 #mas 'Be Focused Pro', id: 961632517
 #mas 'iMovie', id: 408981434
